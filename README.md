@@ -9,7 +9,8 @@ Home Assistant backup automation on network storage
 
 ## Decription
 
-This package allows for the automation of Home Assistant backup to network storage, a functionality introduced in version 2023.6.
+This package allows for the automation of Home Assistant backup to network storage, a feature introduced in version 2023.6.
+
 
 ## Setting up the network storage
 
