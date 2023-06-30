@@ -20,6 +20,14 @@ AAAA
 
 AAA
 
+```
+#########################################################
+# BACKUP FOLDER:
+      key: &bk_folder
+        /share/backup_on_miniserver   
+#########################################################
+```
+
 ## Frontend Custom Card
 
 The entities created in the package can be displayed on a custom card that allows for backup management:
