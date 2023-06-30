@@ -47,4 +47,4 @@ type: entities
 state_color: true
 ```
 
-![alt text](https://github.com/paolo-hub/HA_Network_Storage_Backup/blob/main/images/home_assistant_frontend_card.png)
+![alt text](https://github.com/paolo-hub/HA_Network_Storage_Backup/blob/main/images/home_assistant_card.png)
