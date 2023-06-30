@@ -24,4 +24,4 @@ AAA
 AAA
 
 ![Algorithm schema](./images/home assitant card.jpg)
-![alt text](https://github.com/paolo-hub/HA_Network_Storage_Backup/blob/images/home assitant card.jpg?raw=true)
+![alt text](https://github.com/paolo-hub/HA_Network_Storage_Backup/main/images/home_assitant_frontend_card.jpg?raw=true)
