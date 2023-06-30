@@ -3,6 +3,7 @@ Home Assistant backup automation on network storage
 
 ## Table of contents
 * [Decription](#decription)
+* [Prerequisites](#prerequisites)
 * [Setting up the network storage](#setting-up-the-network-storage)
 * [Package installation](#package-installation)
 * [Frontend Custom Card](#frontend-custom-card)
@@ -11,6 +12,10 @@ Home Assistant backup automation on network storage
 
 This package allows for the automation of Home Assistant backup to network storage, a feature introduced in version 2023.6.
 
+## Prerequisites
+
+* Pakages: https://www.home-assistant.io/docs/configuration/packages/
+* PushOver notification service: https://www.home-assistant.io/integrations/pushover/
 
 ## Setting up the network storage
 
