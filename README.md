@@ -2,7 +2,7 @@
 
 ![alt text](https://badgen.net/badge/release/v.1.0/green?) ![alt text](https://badgen.net/badge/playform/homeassistant/blue?) ![alt text](https://badgen.net/badge/code/yaml/orange?)
 
-Home Assistant backup automation on network storage
+Home Assistant backup automation on network storage.
 
 ## Table of contents
 * [Decription](#decription)
