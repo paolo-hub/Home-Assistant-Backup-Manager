@@ -1,4 +1,7 @@
 # Home Assistant Network Storage Backup
+
+!\[my badge\](https://badgen.net/badge/platform/homeassistant/blue)
+
 Home Assistant backup automation on network storage
 
 ## Table of contents
