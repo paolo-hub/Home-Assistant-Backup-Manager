@@ -17,8 +17,8 @@ This package allows for the automation of Home Assistant backup to network stora
 
 ## Prerequisites
 
-* Pakages: [See Home Assistant Package official page] (https://www.home-assistant.io/docs/configuration/packages/)
-* PushOver notification service: [See Home Assistant Pushover Intagation page] (https://www.home-assistant.io/integrations/pushover/)
+* Pakages: [See Home Assistant Package official page](https://www.home-assistant.io/docs/configuration/packages/)
+* PushOver notification service: [See Home Assistant Pushover Intagation page](https://www.home-assistant.io/integrations/pushover/)
 
 ## Setting up the network storage
 
