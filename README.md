@@ -1,19 +1,21 @@
 # Home Assistant Network Storage Backup
 
-![alt text](https://badgen.net/badge/release/v.1.0/green?) ![alt text](https://badgen.net/badge/playform/homeassistant/blue?) ![alt text](https://badgen.net/badge/code/yaml/orange?)
+![alt text](https://badgen.net/badge/release/v.1.0/green?) ![alt text](https://badgen.net/badge/playform/HomeAssistant/blue?) ![alt text](https://badgen.net/badge/code/yaml/pink?) ![alt text](https://badgen.net/badge/license/GPL-3.0/orange?)
 
 Home Assistant backup automation on network storage.
 
 ## Table of contents
-* [Decription](#decription)
+* [Description](#decription)
 * [Prerequisites](#prerequisites)
+* [Installation](#installation)
 * [Setting up the network storage](#setting-up-the-network-storage)
+* [Enable the folder watcher integration](#enable-the-folder-watcher-integration)
 * [Package installation](#package-installation)
 * [Frontend Custom Card](#frontend-custom-card)
 
-## Decription
+## Description
 
-TStarting from Home Assistant version 2023.6, the new network storage feature is available. This package automates the creation of Home Assistant backups on a dedicated and shared network storage from an external server. It also monitors the execution of backups and notifies the status using the popular Pushover service and the built-in notification system in Home Assistant.
+Starting from Home Assistant version 2023.6, the new network storage feature is [available](https://www.home-assistant.io/blog/2023/06/07/release-20236/#connect-and-use-your-existing-network-storage). This package automates the creation of Home Assistant backups on a dedicated and shared network storage from an external server. It also monitors the execution of backups and notifies the status using the popular Pushover service and the built-in notification system in Home Assistant.
 
 ## Prerequisites
 
@@ -21,13 +23,30 @@ TStarting from Home Assistant version 2023.6, the new network storage feature is
 * Folder Watcher integration: [See the Home Assistant Folder Watcher integration page](https://www.home-assistant.io/integrations/folder_watcher/)
 * PushOver notification service: [See the Home Assistant Pushover intagation page](https://www.home-assistant.io/integrations/pushover/)
 
-## Setting up the network storage
+## Installation
+
+The installation of this package does not require the use of additional components.
+
+### Setting up the network storage
 
 AAAA
 
-## Package installation
+### Enable the folder watcher integration
 
-AAA
+To activate the folder watcher integration, you need to add the following lines to /config/configuration.yaml:
+
+```
+folder_watcher:
+  folder: /path/to/network/storage/folder
+  patterns:
+    - '*.tar'
+```
+
+In the above configuration, you specify the location of the network storage folder and indicate the *.tar format, which is the backup archive format.
+
+### Package installation
+
+Download the package from the resources and copy it to the /config/packages folder. Afterward, modify the path of the network storage folder.
 
 ```
 #########################################################
