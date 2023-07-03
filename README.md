@@ -5,13 +5,14 @@
 Home Assistant backup automation on network storage.
 
 ## Table of contents
-* [Description](#decription)
+* [Description](#description)
 * [Prerequisites](#prerequisites)
 * [Installation](#installation)
 * [Setting up the network storage](#setting-up-the-network-storage)
 * [Enable the folder watcher integration](#enable-the-folder-watcher-integration)
 * [Package installation](#package-installation)
 * [Frontend Custom Card](#frontend-custom-card)
+* [Credits](#credits)
 
 ## Description
 
@@ -84,3 +85,8 @@ state_color: true
 ```
 
 ![alt text](https://github.com/paolo-hub/HA_Network_Storage_Backup/blob/main/images/home_assistant_backup_card.png)
+
+
+## Credits
+
+I received support from the [HassioHelp](https://t.me/HassioHelp) community in the development of this package, and I would like to express my gratitude to them.
