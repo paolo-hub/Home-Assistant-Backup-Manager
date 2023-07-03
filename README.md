@@ -13,12 +13,13 @@ Home Assistant backup automation on network storage.
 
 ## Decription
 
-This package allows for the automation of Home Assistant backup to network storage, a feature introduced in version 2023.6.
+TStarting from Home Assistant version 2023.6, the new network storage feature is available. This package automates the creation of Home Assistant backups on a dedicated and shared network storage from an external server. It also monitors the execution of backups and notifies the status using the popular Pushover service and the built-in notification system in Home Assistant.
 
 ## Prerequisites
 
-* Pakages: [See Home Assistant Package official page](https://www.home-assistant.io/docs/configuration/packages/)
-* PushOver notification service: [See Home Assistant Pushover Intagation page](https://www.home-assistant.io/integrations/pushover/)
+* Pakages: [See Home Assistant Package integration page](https://www.home-assistant.io/docs/configuration/packages/)
+* Folder Watcher integration: [See the Home Assistant Folder Watcher integration page](https://www.home-assistant.io/integrations/folder_watcher/)
+* PushOver notification service: [See the Home Assistant Pushover intagation page](https://www.home-assistant.io/integrations/pushover/)
 
 ## Setting up the network storage
 
