@@ -1,9 +1,9 @@
-# Home Assistant Network Storage Backup
+# Home Assistant Backup Manager
 ## Please wait: under construction
 
-![alt text](https://badgen.net/badge/release/v.1.0/green?) ![alt text](https://badgen.net/badge/playform/HomeAssistant/blue?) ![alt text](https://badgen.net/badge/code/yaml/pink?) ![alt text](https://badgen.net/badge/license/GPL-3.0/orange?)
+![alt text](https://badgen.net/badge/release/v.1.0/green?) ![alt text](https://badgen.net/badge/platform/HomeAssistant/blue?) ![alt text](https://badgen.net/badge/required/Supervisor/red?) ![alt text](https://badgen.net/badge/code/yaml/pink?) ![alt text](https://badgen.net/badge/license/GPL-3.0/orange?)
 
-Home Assistant backup automation on network storage.
+Home Assistant backup manager, both locally and on network storage.
 
 ## Table of contents
 * [Description](#description)
@@ -17,13 +17,20 @@ Home Assistant backup automation on network storage.
 
 ## Description
 
-Starting from Home Assistant version 2023.6, the new network storage feature is [available](https://www.home-assistant.io/blog/2023/06/07/release-20236/#connect-and-use-your-existing-network-storage). This package automates the creation of Home Assistant backups on a dedicated and shared network storage from an external server. It also monitors the execution of backups and notifies the status using the popular Pushover service and the built-in notification system in Home Assistant.
+This package allows you to manage the backup of Home Assistant. You can schedule full or partial backups, either alternatively or concurrently. For example, you can schedule a full backup once a week and a backup of configurations only once a day.
+
+The partial backup manager allows you to choose which elements to include in the backup, such as add-ons and system folders. The backup process is monitored, and you can receive system notifications and Pushover notifications indicating the successful completion or failure of the backup.
+
+In addition to managing the settings and automatically creating backups, you can also decide how many backups to keep, giving you control over the total size of the backup archive. This package also provides information about the latest available backup, such as its name, date, and type.
+
+The backup is created in the default location set in Home Assistant, which means it can be done locally, as the default setting, or on network storage, a feature available from Home Assistant version [2023.6](https://www.home-assistant.io/blog/2023/06/07/release-20236/#connect-and-use-your-existing-network-storage)
 
 ## Prerequisites
 
+* Supervisor: [See Home Assistant official page](https://www.home-assistant.io/integrations/hassio/)
 * Pakages: [See Home Assistant Package integration page](https://www.home-assistant.io/docs/configuration/packages/)
-* Folder Watcher integration: [See the Home Assistant Folder Watcher integration page](https://www.home-assistant.io/integrations/folder_watcher/)
 * PushOver notification service: [See the Home Assistant Pushover intagation page](https://www.home-assistant.io/integrations/pushover/)
+* Shell Access, for example with SSHCommand Add-On available trought HACS [See the GitHUB repository page](https://github.com/AlexxIT/SSHCommand)
 
 ## Installation
 
