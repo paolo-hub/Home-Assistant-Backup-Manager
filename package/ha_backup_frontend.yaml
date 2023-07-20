@@ -1,0 +1,114 @@
+type: vertical-stack
+cards:
+  - type: conditional
+    conditions:
+      - entity: input_boolean.ha_backup_detailed_information
+        state: 'off'
+    card:
+      type: entities
+      entities:
+        - entity: input_text.ha_backup_status
+        - label: Latest Backup
+          type: section
+        - entity: sensor.ha_backup_last_backup_name
+        - entity: sensor.ha_backup_last_backup_date
+        - entity: input_boolean.ha_backup_detailed_information
+        - label: Manual Execution of Backups
+          type: section
+        - entity: input_button.ha_backup_full_execute_manually
+        - entity: input_button.ha_backup_partial_execute_manually
+        - entity: input_button.ha_delete_backup_manually
+        - label: Show Backup Settings
+          type: section
+        - entity: input_boolean.ha_backup_settings_for_full
+        - entity: input_boolean.ha_backup_settings_for_partial
+        - entity: input_boolean.ha_backup_settings_for_retaining
+      title: Home Assistant Backup
+      icon: mdi:cloud-upload-outline
+      state_color: true
+      show_header_toggle: false
+  - type: conditional
+    conditions:
+      - entity: input_boolean.ha_backup_detailed_information
+        state: 'on'
+    card:
+      type: entities
+      entities:
+        - entity: input_text.ha_backup_status
+        - label: Latest Backup
+          type: section
+        - entity: sensor.ha_backup_last_backup_name
+        - entity: sensor.ha_backup_last_backup_date
+        - entity: sensor.ha_backup_last_backup_dimension
+        - entity: sensor.ha_backup_last_backup_type
+        - entity: sensor.ha_backup_last_backup_protected
+        - entity: sensor.ha_backup_last_backup_slug
+        - entity: input_boolean.ha_backup_detailed_information
+        - label: Archive Backup Informations
+          type: section
+        - entity: sensor.ha_backup_retained_backups
+        - entity: sensor.ha_backup_archive_dimension
+        - label: Manual Execution of Backups
+          type: section
+        - entity: input_button.ha_backup_full_execute_manually
+        - entity: input_button.ha_backup_partial_execute_manually
+        - entity: input_button.ha_delete_backup_manually
+        - label: Show Backup Settings
+          type: section
+        - entity: input_boolean.ha_backup_settings_for_full
+        - entity: input_boolean.ha_backup_settings_for_partial
+        - entity: input_boolean.ha_backup_settings_for_retaining
+      title: Home Assistant Backup
+      icon: mdi:cloud-upload-outline
+      state_color: true
+      show_header_toggle: false
+  - type: conditional
+    conditions:
+      - entity: input_boolean.ha_backup_settings_for_full
+        state: 'on'
+    card:
+      type: entities
+      icon: mdi:circle
+      show_header_toggle: false
+      title: Full Backup Settings
+      state_color: true
+      entities:
+        - entity: input_boolean.ha_backup_auto_full
+        - entity: input_datetime.ha_backup_time
+        - entity: input_select.ha_backup_day
+        - entity: input_number.ha_backup_timeout
+  - type: conditional
+    conditions:
+      - entity: input_boolean.ha_backup_settings_for_partial
+        state: 'on'
+    card:
+      type: entities
+      icon: mdi:circle-half-full
+      show_header_toggle: false
+      title: Partial Backup Settings
+      state_color: true
+      entities:
+        - entity: input_boolean.ha_backup_auto_partial
+        - entity: input_datetime.ha_backup_partial_time
+        - entity: input_select.ha_backup_partial_day
+        - entity: input_number.ha_backup_timeout
+        - label: Select Additional Backup Element
+          type: section
+        - entity: input_boolean.ha_backup_addon
+        - entity: input_boolean.ha_backup_folder_local_add_ons
+        - entity: input_boolean.ha_backup_folder_media
+        - entity: input_boolean.ha_backup_folder_ssl
+        - entity: input_boolean.ha_backup_folder_share
+  - type: conditional
+    conditions:
+      - entity: input_boolean.ha_backup_settings_for_retaining
+        state: 'on'
+    card:
+      type: entities
+      icon: mdi:archive-settings
+      show_header_toggle: false
+      title: Retained Backups Settings
+      state_color: true
+      entities:
+        - entity: input_boolean.ha_backup_remove_old_backup
+        - entity: input_number.ha_backup_retained_number

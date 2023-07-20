@@ -1,0 +1,676 @@
+#################################################################
+#                                                               #
+#                     Packages/HA Backup                        #
+#                                                               #
+#################################################################
+
+#################################################################
+#                                                               #
+#                          Customize                            #
+#                                                               #
+#################################################################
+homeassistant:
+  customize:
+    package.ha_backup:
+      version: "1.0.0"
+      date: 📅 20/07/2023 - Updated 20/07/2023
+      info: https://github.com/paolo-hub/Home-Assistant-Backup-Manager
+      customize: &customize
+        package: "Home Assistant Backup Manager by Paolo-Hub"
+    #########################################################
+    input_number.ha_backup_timeout:
+      <<: *customize
+      friendly_name: Backup Timeout (min)
+      icon: mdi:timer-sand
+    input_number.ha_backup_retained_number:
+      <<: *customize
+      friendly_name: Number of Retained Backups
+      icon: mdi:counter
+    automation.ha_backup:
+      friendly_name: HA Backup Automation
+      icon: mdi:cog
+      <<: *customize
+    sensor.ha_backup_last_backup_name:
+      <<: *customize
+      friendly_name: Name
+      icon: mdi:backup-restore    
+    sensor.ha_backup_last_backup_dimension:
+      <<: *customize
+      friendly_name: Dimension
+      icon: mdi:archive-outline
+    sensor.ha_backup_last_backup_date:
+      <<: *customize
+      friendly_name: Date
+      icon: mdi:calendar-today-outline
+    sensor.ha_backup_last_backup_type:
+      <<: *customize
+      friendly_name: Type
+      icon: mdi:format-list-bulleted-type
+    sensor.ha_backup_last_backup_protected:
+      <<: *customize
+      friendly_name: Protected
+      icon: mdi:lock-outline
+    sensor.ha_backup_last_backup_slug:
+      <<: *customize
+      friendly_name: File name
+      icon: mdi:file-restore-outline
+    sensor.ha_backup_retained_backups:
+      <<: *customize
+      friendly_name: Backups number
+      icon: mdi:counter
+    sensor.ha_backup_archive_dimension:
+      <<: *customize
+      friendly_name: Archive Dimension
+      icon: mdi:archive
+    sensor.ha_backup_addon_list:
+      <<: *customize
+      friendly_name: HA Add-ons List
+      icon: mdi:format-list-group     
+    sensor.ha_backup_folders:
+      <<: *customize
+      icon: mdi:folder-check
+    sensor.ha_backup_selected_folders:
+      <<: *customize
+    shell_command.ha_backups_remove_old:
+      <<: *customize    
+    input_boolean.ha_backup_remove_old_backup:
+      <<: *customize
+    input_boolean.ha_backup_auto_full:
+      <<: *customize
+    input_boolean.ha_backup_auto_partial:
+      <<: *customize
+    input_boolean.ha_backup_addon:
+      <<: *customize
+    input_boolean.ha_backup_folder_local_add_ons:
+      <<: *customize
+      friendly_name: addons/local
+    input_boolean.ha_backup_folder_media:
+      <<: *customize
+      friendly_name: media
+    input_boolean.ha_backup_folder_ssl:
+      <<: *customize
+      friendly_name: ssl
+    input_boolean.ha_backup_folder_share:
+      <<: *customize
+      friendly_name: share
+    input_boolean.ha_backup_settings_for_full:
+      <<: *customize
+    input_boolean.ha_backup_settings_for_partial:
+      <<: *customize
+    input_boolean.ha_backup_settings_for_retaining:
+      <<: *customize
+    input_boolean.ha_backup_detailed_information:
+      <<: *customize
+    input_button.ha_backup_execute:
+      <<: *customize
+    input_button.ha_delete_backup_manually:
+      <<: *customize
+    input_button.ha_backup_partial_execute_manually:
+      <<: *customize
+    input_select.ha_backup_day:
+      <<: *customize
+    input_select.ha_backup_partial_day:
+      <<: *customize
+    input_datetime.ha_backup_time:
+      <<: *customize
+    input_datetime.ha_backup_partial_time:
+      <<: *customize
+    input_text.ha_backup_status:
+      <<: *customize
+
+#########################################################
+#                                                       #
+#                       GROUP                           #
+#                                                       #
+#########################################################
+group:
+  home_assistant_backup_pack:
+    name: Home Assistant Backup Pack
+    entities:
+      - input_boolean.ha_backup_auto_full
+      - input_boolean.ha_backup_auto_partial
+      - input_boolean.ha_backup_remove_old_backup
+      - input_boolean.ha_backup_addon
+      - input_boolean.ha_backup_folder_local_add_ons
+      - input_boolean.ha_backup_folder_media
+      - input_boolean.ha_backup_folder_ssl
+      - input_boolean.ha_backup_folder_share
+      - input_boolean.ha_backup_settings_for_full
+      - input_boolean.ha_backup_settings_for_partial
+      - input_boolean.ha_backup_settings_for_retaining
+      - input_boolean.ha_backup_detailed_information
+      - input_button.ha_backup_full_execute_manually
+      - input_button.ha_delete_backup_manually
+      - input_button.ha_backup_partial_execute_manually
+      - input_select.ha_backup_day
+      - input_select.ha_backup_partial_day
+      - input_datetime.ha_backup_time
+      - input_datetime.ha_backup_partial_time
+      - input_text.ha_backup_status
+      - input_number.ha_backup_timeout
+      - input_number.ha_backup_retained_number
+      - sensor.ha_backup_last_backup_name
+      - sensor.ha_backup_last_backup_dimension
+      - sensor.ha_backup_last_backup_date
+      - sensor.ha_backup_last_backup_type
+      - sensor.ha_backup_last_backup_protected
+      - sensor.ha_backup_last_backup_slug
+      - sensor.ha_backup_retained_backups
+      - sensor.ha_backup_archive_dimension
+      - sensor.ha_backup_addon_list
+      - sensor.ha_backup_folders
+      - sensor.ha_backup_selected_folders
+      - shell_command.ha_backups_remove_old
+      - automation.ha_backup
+        
+  home_assistant_backup_selected_folders:
+    name: Home Assistant Backup Selected Folders
+    entities:
+      - input_boolean.ha_backup_folder_local_add_ons
+      - input_boolean.ha_backup_folder_media
+      - input_boolean.ha_backup_folder_ssl
+      - input_boolean.ha_backup_folder_share
+
+#########################################################
+#                                                       #
+#                        Input                          #
+#                                                       #
+#########################################################
+input_boolean:
+  # Enable Automatic Backup Switch
+  ha_backup_auto_full:
+    name: Automatic Full Backup
+    icon: mdi:cloud-upload
+
+  # Enable Automatic Old Backups remove Switch
+  ha_backup_remove_old_backup:
+    name: Remove the older backups
+    icon: mdi:file-remove
+
+  # Enable Autometic Partial Backup Switch
+  ha_backup_auto_partial:
+    name: Automatic Partial Backup
+    icon: mdi:cloud-upload
+
+  # Selector for backup Addon
+  ha_backup_addon:
+    name: Add-ons Backup
+    icon: mdi:format-list-bulleted
+
+  # Selector for backup Local add-ons folder
+  ha_backup_folder_local_add_ons:
+    name: Local add-ons
+    icon: mdi:folder-arrow-up-outline
+
+  # Selector for backup Media folder
+  ha_backup_folder_media:
+    name: Media
+    icon: mdi:folder-arrow-up-outline
+
+  # Selector for backup SSL folder
+  ha_backup_folder_ssl:
+    name: SSL
+    icon: mdi:folder-arrow-up-outline
+
+  # Selector for backup Share folder
+  ha_backup_folder_share:
+    name: Share
+    icon: mdi:folder-arrow-up-outline
+
+  # Enable Show Full Backup Settings
+  ha_backup_settings_for_full:
+    name: Full Backup Settings
+    icon: mdi:cloud-upload
+
+  # Enable Show Partial Backup Settings
+  ha_backup_settings_for_partial:
+    name: Partial Backup Settings
+    icon: mdi:cloud-upload
+
+  # Enable Show Retained Backup Settings
+  ha_backup_settings_for_retaining:
+    name: Retained Backup Settings
+    icon: mdi:archive-settings
+
+  # Enable Show Detailed Backup Information
+  ha_backup_detailed_information:
+    name: Show Detailed Backup Information
+    icon: mdi:details
+
+
+#########################################################
+input_button:
+  # Button to manually execute the full backup
+  ha_backup_full_execute_manually:
+    name: Create Full Backup
+    icon: mdi:backup-restore
+
+  # Button to manually execute the partial backup
+  ha_backup_partial_execute_manually:
+    name: Create Partial Backup
+    icon: mdi:backup-restore
+
+  # Button to manually delate old backups.
+  ha_delete_backup_manually:
+    name: Delate Backups
+    icon: mdi:close-circle-outline
+
+#########################################################
+# Input to select the days for automatic backup.
+input_select:
+  # for full backup
+  ha_backup_day:
+    name: Backup days
+    options:
+      - "Every day"
+      - "Mon - Wed - Fri"
+      - "Mon and Fri"
+      - "Saturday"
+      - "Sunday"
+      - "Never"
+    icon: mdi:calendar
+
+  # for partial backup
+  ha_backup_partial_day:
+    name: Partial Backup days
+    options:
+      - "Every day"
+      - "Mon - Wed - Fri"
+      - "Mon and Fri"
+      - "Saturday"
+      - "Sunday"
+      - "Never"
+    icon: mdi:calendar
+
+#########################################################
+# Input for the schedule time of automatic backup.
+input_datetime:
+  # for full backup
+  ha_backup_time:
+    name: Backup Time
+    has_date: false
+    has_time: true
+
+  # for partial backup
+  ha_backup_partial_time:
+    name: Partial Backup Time
+    has_date: false
+    has_time: true
+
+#########################################################
+# Backup status indicator.
+input_text:
+  ha_backup_status:
+    icon: mdi:database-check
+    name: Backup Status
+
+#########################################################
+input_number:
+ # Selector to choose the wait duration for backup check.
+ ha_backup_timeout:
+   min: 15
+   max: 180
+   step: 15
+
+ # Selector to chose how many backuops to mantain
+ ha_backup_retained_number:
+   min: 1
+   max: 20
+   step: 1
+
+#########################################################
+#                                                       #
+#                    Commandline                        #
+#                                                       #
+#########################################################
+command_line:
+    # Sensor reporting Addonlist
+  - sensor:
+      name: "HA Backup Addon List"
+      unique_id: ha_backup_addon_list
+      scan_interval: 1800
+      json_attributes:
+        - List
+      command: |
+       curl http://supervisor/addons -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)"  | jq -rc '.data.addons[] | select (.installed != false) | .slug' | jq --raw-input . | jq --slurp  | jq -r '{"List":.}'
+      value_template: >
+        {{ value_json|length }} 
+
+    # Sensor for Name
+  - sensor:
+      name: "HA Backup Last Backup Name"
+      command: 'curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/backups | jq ''[.data.backups[]] | sort_by(.date) | last'''
+      value_template: "{{value_json.name | default}}"
+      unique_id: ha_backup_last_backup_name
+      scan_interval: 10
+
+    # Dimension
+  - sensor:
+      name: "HA Backup Last Backup Dimension"
+      command: 'curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/backups | jq ''[.data.backups[]] | sort_by(.date) | last'''
+      value_template: "{{value_json.size | default}}"
+      unit_of_measurement: MB
+      unique_id: ha_backup_last_backup_dimension
+      scan_interval: 10
+        
+    # Date        
+  - sensor:
+      name: "HA Backup Last Backup Date"
+      command: 'curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/backups | jq ''[.data.backups[]] | sort_by(.date) | last'''
+      value_template: "{{ value_json.date | as_timestamp | timestamp_custom('%Y-%m-%d') }}"
+      unique_id: ha_backup_last_backup_date
+      scan_interval: 10
+        
+    # Type
+  - sensor:
+      name: "HA Backup Last Backup Type"
+      command: 'curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/backups | jq ''[.data.backups[]] | sort_by(.date) | last'''
+      value_template: "{{value_json.type | default}}"
+      unique_id: ha_backup_last_backup_type
+      scan_interval: 10
+
+    # Protected
+  - sensor:
+      name: "HA Backup Last Backup Protected"
+      command: 'curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/backups | jq ''[.data.backups[]] | sort_by(.date) | last'''
+      value_template: "{{value_json.protected | default}}"
+      unique_id: ha_backup_last_backup_protected
+      scan_interval: 10
+
+    # File Name
+  - sensor:
+      name: "HA Backup Last Backup Slug"
+      command: 'curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/backups | jq ''[.data.backups[]] | sort_by(.date) | last'''
+      value_template: "{{value_json.slug | default}}"
+      unique_id: ha_backup_last_backup_slug
+      scan_interval: 10
+        
+    # Number of backups
+  - sensor:
+       name: "HA Backup Retained Backups"
+       command: 'curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/backups | jq --raw-output ".data.backups[].slug" | wc -w'
+       unique_id: ha_backup_retained_backups
+       scan_interval: 10
+
+    # Dimension of backups archive
+  - sensor:
+       name: "HA Backup Archive Dimension"
+       command: | 
+         curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/backups | jq --raw-output ".data.backups[].size" | awk '{s+=$1} END {print s}'
+       value_template: "{{ value | multiply(0.0009765625) | round(2) }}"
+       unit_of_measurement: "GB"
+       unique_id: ha_backup_archive_dimension
+       scan_interval: 10
+
+#########################################################
+#                                                       #
+#                      Template                         #
+#                                                       #
+#########################################################
+template:
+      # Sensor for selected folders to be backuped
+    - sensor:
+        - name: "HA Backup Selected Folders"
+          state: >
+            {{ expand('group.home_assistant_backup_selected_folders')
+              | selectattr('state','eq','on') 
+              | map(attribute='name')
+              | list }}
+          unique_id: ha_backup_selected_folders
+
+#########################################################
+#                                                       #
+#                    Shell Command                      #
+#                                                       #
+#########################################################
+shell_command:
+  # Remove old backup script
+  ha_backups_remove_old: /bin/bash /config/backup_remove.sh {{ states('input_number.ha_backup_retained_number')|int(0) }}
+
+
+#########################################################
+#                                                       #
+#                     Automations                       #
+#                                                       #
+#########################################################
+automation:
+  - alias: ha_backup
+    description: ""
+    trigger:
+      - platform: state
+        entity_id: input_button.ha_backup_full_execute_manually
+        id: ha_full_backup_manual
+        alias: Trigger full backup manual
+      - platform: template
+        value_template: >-
+          {{ states('sensor.time') ==
+          (states.input_datetime.ha_backup_time.attributes.timestamp | int |
+          timestamp_custom('%H:%M', False)) }}
+        id: ha_full_backup_automatic
+        alias: Trigger full backup automatic
+      - platform: state
+        entity_id: input_button.ha_backup_partial_execute_manually
+        id: ha_partial_backup_manual
+        alias: Trigger partial backup manual
+      - platform: template
+        value_template: >-
+          {{ states('sensor.time') ==
+          (states.input_datetime.ha_backup_partial_time.attributes.timestamp | int |
+          timestamp_custom('%H:%M', False)) }}
+        id: ha_partial_backup_automatic
+        alias: Trigger partial backup automatic
+      - platform: state
+        entity_id: input_button.ha_delete_backup_manually
+        id: ha_manual_bk_delate
+        alias: Trigger delate old backup
+    condition:
+      - condition: or
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity_id: input_boolean.ha_backup_auto_full
+                state: "on"
+                alias: Condition 1 - Automatic full backup ON
+              - condition: template
+                value_template: >-
+                  {% set today =
+                  ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'][now().weekday()]
+                  %} {% if is_state("input_select.ha_backup_day", "Every day") %}
+                  true {% elif (is_state("input_select.ha_backup_day", "Mon and
+                  Fri") and today in ["Monday","Friday"]) %} true {% elif
+                  is_state("input_select.ha_backup_day", "Saturday") and today in
+                  ["Saturday"] %} true {% elif
+                  is_state("input_select.ha_backup_day", "Sunday") and today in
+                  ["Sunday"] %} true {% elif is_state("input_select.ha_backup_day",
+                  "Mon - Wed - Fri") and today in ["Monday","Wednesday","Friday"] %}
+                  true {% else %} false {% endif %}
+                alias: Condition 2 - Automatic full backup correct day
+              - condition: trigger
+                id: ha_full_backup_automatic
+                alias: Condition 3 - Automatic ful backup triggered
+            alias: Condition for automatic full backup
+          - condition: trigger
+            id:
+              - ha_full_backup_manual
+            alias: Condition for manual full backup
+          - condition: and
+            conditions:
+              - condition: state
+                entity_id: input_boolean.ha_backup_auto_partial
+                state: "on"
+                alias: Condition 1 - Automatic partial backup ON
+              - condition: template
+                value_template: >-
+                  {% set today =
+                  ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'][now().weekday()]
+                  %} {% if is_state("input_select.ha_backup_partial_day", "Every
+                  day") %} true {% elif
+                  (is_state("input_select.ha_backup_partial_day", "Mon and Fri") and
+                  today in ["Monday","Friday"]) %} true {% elif
+                  is_state("input_select.ha_backup_partial_day", "Saturday") and
+                  today in ["Saturday"] %} true {% elif
+                  is_state("input_select.ha_backup_partial_day", "Sunday") and today
+                  in ["Sunday"] %} true {% elif
+                  is_state("input_select.ha_backup_partial_day", "Mon - Wed - Fri")
+                  and today in ["Monday","Wednesday","Friday"] %} true {% else %}
+                  false {% endif %}
+                alias: Condition 2 - Automatic partial backup correct day
+              - condition: trigger
+                id: ha_partial_backup_automatic
+                alias: Condition 3 - Automatic partial backup triggered
+            alias: Conditions for automatic partial backup
+          - condition: trigger
+            id:
+              - ha_partial_backup_manual
+            alias: Condition for maial partial backup
+          - condition: trigger
+            id:
+              - ha_manual_bk_delate
+            alias: Condition for manuale delate old backup
+        alias: Conditions for automatic backup
+    action:
+      - choose:
+          - conditions:
+              - condition: trigger
+                id:
+                  - ha_full_backup_automatic
+                  - ha_full_backup_manual
+                alias: Option 1 - Full backup triggered
+            sequence:
+              - service: input_text.set_value
+                data:
+                  value: Backup started at {{states('sensor.time')}}
+                target:
+                  entity_id: input_text.ha_backup_status
+                alias: Update backup status - Create full
+              - service: hassio.backup_full
+                data:
+                  compressed: false
+                  name: Backup {{ now().strftime('%Y-%m-%d') }}
+                alias: Ececute full backup
+          - conditions:
+              - condition: trigger
+                id:
+                  - ha_partial_backup_automatic
+                  - ha_partial_backup_manual
+                alias: Option 2 - Partial backup triggered
+            sequence:
+              - service: input_text.set_value
+                data:
+                  value: Partial backup started at {{states('sensor.time')}}
+                target:
+                  entity_id: input_text.ha_backup_status
+                alias: Update backup status - Create partial
+              - service: hassio.backup_partial
+                data:
+                  name: Backup Partial {{ now().strftime('%Y-%m-%d') }}
+                  compressed: false
+                  homeassistant: true
+                  addons: |
+                    {% if is_state('input_boolean.ha_backup_addon', 'on') -%}
+                    {{ state_attr('sensor.ha_backup_addon_list','List') }}
+                    {%- else -%}
+                    {{ [] }}
+                    {% endif -%}
+                  folders: |
+                    {{ states('sensor.ha_backup_selected_folders') }}     
+                alias: Execute partial backup
+        alias: Actions if backup create is triggered
+      - if:
+          - condition: trigger
+            id:
+              - ha_full_backup_automatic
+              - ha_full_backup_manual
+              - ha_partial_backup_automatic
+              - ha_partial_backup_manual
+            alias: IF a backup is created
+        then:
+          - wait_for_trigger:
+              - platform: event
+                event_type: state_changed
+                event_data:
+                  entity_id: sensor.ha_backup_last_backup_slug
+            timeout: 
+              minutes: |
+                {{ states('input_number.ha_backup_timeout') | int(0) }}
+            continue_on_timeout: true
+            alias: Wait for trigger
+          - if: "{{ wait.remaining != 0 }}"
+            then:
+              - service: input_text.set_value
+                data_template:
+                  entity_id: input_text.ha_backup_status
+                  value: >-
+                    Last Backup {{ now().timestamp() | timestamp_custom('%Y-%m-%d')}}
+                    at {{states('sensor.time')}}
+                alias: Set backup status to succesfull
+              - service: notify.pushover_hassio
+                data:
+                  message: |
+                    Backup completed
+                    {{ now().timestamp() | timestamp_custom('%Y-%m-%d') }}
+                  title: Home Assistant
+                  data:
+                    sound: pinnabor
+                    priority: 0
+                alias: Pushover succesfull notification
+              - service: persistent_notification.create
+                data:
+                  message: >
+                    Backup completed
+                    {{ now().timestamp() | timestamp_custom('%Y-%m-%d') }}
+                    at {{states('sensor.time')}}
+                  title: Home Assistant Backup
+                  notification_id: ha_backup_persistant_notification
+                alias: Persistant notification fo succesfull backup
+              - alias: Test if the old backup shoud be delated
+                if: 
+                  - condition: template
+                    value_template: |
+                      {{ states('input_boolean.ha_backup_remove_old_backup') == 'on' }}
+                    alias: IF automaitc backup delate is selected
+                then:
+                  - service: shell_command.ha_backups_remove_old
+                    alias: Execut the shell command delate
+            else:
+              - service: input_text.set_value
+                data_template:
+                  entity_id: input_text.ha_backup_status
+                  value: Backup Failled!
+                alias: Set backup status to failed
+              - service: notify.pushover_hassio
+                data:
+                  message: |
+                    Backup creation failed!
+                  title: Home Assistant
+                  data:
+                    sound: pinnabor
+                    priority: 1
+                alias: Pushover failed notification
+              - service: persistent_notification.create
+                data:
+                  message: |
+                    Backup creation failed!
+                    {{ now().timestamp() | timestamp_custom('%Y-%m-%d') }}
+                  title: Home Assistant Backup
+                  notification_id: ha_backup_persistant_notification
+                alias: Persistant notification to backp failed
+            alias: Test beckup creation
+        alias: Actions id a backup is created
+      - if:
+          - condition: trigger
+            id:
+              - ha_manual_bk_delate
+            alias: IF manual backup delate triggered
+        then:
+          - service: shell_command.ha_backups_remove_old
+            alias: Execute the shell command delate
+        alias: Actions if manual backup delate is triggered
+
+
+#################################################################
+#                                                               #
+#                 END of Packages/HA Backup                     #
+#                                                               #
+#################################################################
