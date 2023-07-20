@@ -1,5 +1,4 @@
 # Home Assistant Backup Manager
-## Please wait: under construction
 
 ![alt text](https://badgen.net/badge/release/v.1.0/green?) ![alt text](https://badgen.net/badge/platform/HomeAssistant/blue?) ![alt text](https://badgen.net/badge/required/Supervisor/red?) ![alt text](https://badgen.net/badge/code/yaml/pink?) ![alt text](https://badgen.net/badge/license/GPL-3.0/orange?)
 
