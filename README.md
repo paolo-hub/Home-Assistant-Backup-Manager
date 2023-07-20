@@ -65,24 +65,42 @@ Then, from the dropdown list, choose the location created with network storage
 
 
 ## Frontend Custom Card
+The card for the frontend is designed to be dynamic.
+The basic display shows:
 
-The entities created in the package can be displayed on a custom card that allows for backup management:
-* Perform manual backup
-* Enable/disable automatic backup
-* Set backup schedule
-* Set the day or days of the week to perform the backup
-* Set the delay for checking the completion of the backup (time depends on the backup size)
-* Display the status of the backup execution
-
-
+* The health status of the backup.
+* The name and date of the last backup.
+* The option to manually execute a full/partial backup and delete old backups, as configured in the settings explained below.
 
 ![alt text](https://github.com/paolo-hub/Home-Assistant-Backup-Manager/blob/main/images/Basic%20Frontend.jpg)
 
+By activating the "Show detailed backup information" selector, the card will expand, adding additional data about the last backup and displaying information about the complete backup archive, including the number of available backups and their total size.
+
 ![alt text](https://github.com/paolo-hub/Home-Assistant-Backup-Manager/blob/main/images/Detailed%20Frontend.jpg)
+
+The settings can be enabled using their respective selectors.
+
+The "Full Backup Settings" selector displays settings related to the full backup of Home Assistant, including:
+
+* A selector to enable the automation of the full backup.
+* Scheduling settings, such as days and time.
+* A timeout setting for the backup, which serves as a waiting period for the automated backup check to ensure its completion. It's essential to set an adequately long time to ensure that the backup has been created. In any case, the check will conclude correctly at the end of the actual backup creation duration.
 
 ![alt text](https://github.com/paolo-hub/Home-Assistant-Backup-Manager/blob/main/images/Full%20Backup%20Settings.jpg)
 
+The "Partial Backup Settings" selector shows settings related to the partial backup of Home Assistant, including:
+
+* A selector to enable the automation of the partial backup.
+* Scheduling settings, such as days and time.
+* A selector for the backup timeout, as described above.
+* Selectors to enable the components to include in the backup. By default, the backup includes Home Assistant, and you can add Add-Ons and system folders to the partial backup. Enabling all options will result in a partial backup equivalent to a full backup.
+
 ![alt text](https://github.com/paolo-hub/Home-Assistant-Backup-Manager/blob/main/images/Partial%20Backup%20Settings.jpg)
+
+The "Retained Backup Settings" selector displays settings related to the removal of old backups of Home Assistant, ensuring that the overall size of the archive is controlled, including:
+
+* A selector to enable the automation of old backup removal.
+* A selector to specify the number of backups to keep, automatically deleting all older backups beyond this number.
 
 ![alt text](https://github.com/paolo-hub/Home-Assistant-Backup-Manager/blob/main/images/Retained%20Backup%20Settings.jpg)
 
