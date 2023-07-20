@@ -76,8 +76,15 @@ The entities created in the package can be displayed on a custom card that allow
 
 
 
-![alt text](https://github.com/paolo-hub/HA_Network_Storage_Backup/blob/main/images/home_assistant_backup_card.png)
+![alt text](https://github.com/paolo-hub/Home-Assistant-Backup-Manager/blob/main/images/Basic%20Frontend.jpg)
 
+![alt text](https://github.com/paolo-hub/Home-Assistant-Backup-Manager/blob/main/images/Detailed%20Frontend.jpg)
+
+![alt text](https://github.com/paolo-hub/Home-Assistant-Backup-Manager/blob/main/images/Full%20Backup%20Settings.jpg)
+
+![alt text](https://github.com/paolo-hub/Home-Assistant-Backup-Manager/blob/main/images/Partial%20Backup%20Settings.jpg)
+
+![alt text](https://github.com/paolo-hub/Home-Assistant-Backup-Manager/blob/main/images/Retained%20Backup%20Settings.jpg)
 
 ## Credits
 
