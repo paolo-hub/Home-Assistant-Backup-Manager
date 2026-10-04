@@ -110,3 +110,6 @@ it during v3 installation. Do not remove the live legacy package during initial 
 - https://www.home-assistant.io/integrations/template/ (restored trigger attributes)
 - https://www.home-assistant.io/docs/automation/trigger/
 - https://www.home-assistant.io/docs/templating/
+- https://www.home-assistant.io/dashboards/actions/
+- https://www.home-assistant.io/dashboards/button/
+- https://www.home-assistant.io/dashboards/history-graph/

@@ -73,3 +73,10 @@ against defined entities; browser rendering remains a live E2E check.
   are intentionally not performed. See V3_E2E.md.
 
 No merge, tag or release has been created. BMA and HA_backup remain unchanged.
+
+## BMA event boundary verification
+
+Also executed the unchanged upstream `tests/test_events.py` from BMA stable
+1.1.0 at `161eeba96b50e2679c2849e948c306991506486a`: **9 passed** (0.04 s).
+This verifies the delegated startup/deduplication boundary separately; those
+upstream tests are not copied into the package repository and BMA is not modified.
