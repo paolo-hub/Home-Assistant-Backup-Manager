@@ -1,674 +1,939 @@
-#################################################################
-#                                                               #
-#                     Packages/HA Backup                        #
-#                                                               #
-#################################################################
-
-#################################################################
-#                                                               #
-#                          Customize                            #
-#                                                               #
-#################################################################
+# Home Assistant Backup Manager 3.0 development / BMA 1.1.0
+# Install alongside legacy under a DIFFERENT filename: pkg_bma_backup.yaml.
+# Configure provider agent_id values below using BMA list_agents.
+# Empty provider IDs intentionally fail closed when selected.
+# Do not enable real retention or schedules before the approved E2E.
 homeassistant:
   customize:
-    package.ha_backup:
-      version: "1.0.1"
-      date: 📅 20/07/2023 - Updated 03/07/2024
-      info: https://github.com/paolo-hub/Home-Assistant-Backup-Manager
-      customize: &customize
-        package: "Home Assistant Backup Manager by Paolo-Hub"
-    #########################################################
-    input_number.ha_backup_timeout:
-      <<: *customize
-      friendly_name: Backup Timeout (min)
-      icon: mdi:timer-sand
-    input_number.ha_backup_retained_number:
-      <<: *customize
-      friendly_name: Number of Retained Backups
-      icon: mdi:counter
-    automation.ha_backup:
-      friendly_name: HA Backup Automation
-      icon: mdi:cog
-      <<: *customize
-    sensor.ha_backup_last_backup_name:
-      <<: *customize
-      friendly_name: Name
-      icon: mdi:backup-restore    
-    sensor.ha_backup_last_backup_dimension:
-      <<: *customize
-      friendly_name: Dimension
-      icon: mdi:archive-outline
-    sensor.ha_backup_last_backup_date:
-      <<: *customize
-      friendly_name: Date
-      icon: mdi:calendar-today-outline
-    sensor.ha_backup_last_backup_type:
-      <<: *customize
-      friendly_name: Type
-      icon: mdi:format-list-bulleted-type
-    sensor.ha_backup_last_backup_protected:
-      <<: *customize
-      friendly_name: Protected
-      icon: mdi:lock-outline
-    sensor.ha_backup_last_backup_slug:
-      <<: *customize
-      friendly_name: File name
-      icon: mdi:file-restore-outline
-    sensor.ha_backup_retained_backups:
-      <<: *customize
-      friendly_name: Backups number
-      icon: mdi:counter
-    sensor.ha_backup_archive_dimension:
-      <<: *customize
-      friendly_name: Archive Dimension
-      icon: mdi:archive
-    sensor.ha_backup_addon_list:
-      <<: *customize
-      friendly_name: HA Add-ons List
-      icon: mdi:format-list-group     
-    sensor.ha_backup_folders:
-      <<: *customize
-      icon: mdi:folder-check
-    sensor.ha_backup_selected_folders:
-      <<: *customize
-    shell_command.ha_backups_remove_old:
-      <<: *customize    
-    input_boolean.ha_backup_remove_old_backup:
-      <<: *customize
-    input_boolean.ha_backup_auto_full:
-      <<: *customize
-    input_boolean.ha_backup_auto_partial:
-      <<: *customize
-    input_boolean.ha_backup_addon:
-      <<: *customize
-    input_boolean.ha_backup_folder_local_add_ons:
-      <<: *customize
-      friendly_name: addons/local
-    input_boolean.ha_backup_folder_media:
-      <<: *customize
-      friendly_name: media
-    input_boolean.ha_backup_folder_ssl:
-      <<: *customize
-      friendly_name: ssl
-    input_boolean.ha_backup_folder_share:
-      <<: *customize
-      friendly_name: share
-    input_boolean.ha_backup_settings_for_full:
-      <<: *customize
-    input_boolean.ha_backup_settings_for_partial:
-      <<: *customize
-    input_boolean.ha_backup_settings_for_retaining:
-      <<: *customize
-    input_boolean.ha_backup_detailed_information:
-      <<: *customize
-    input_button.ha_backup_execute:
-      <<: *customize
-    input_button.ha_delete_backup_manually:
-      <<: *customize
-    input_button.ha_backup_partial_execute_manually:
-      <<: *customize
-    input_select.ha_backup_day:
-      <<: *customize
-    input_select.ha_backup_partial_day:
-      <<: *customize
-    input_datetime.ha_backup_time:
-      <<: *customize
-    input_datetime.ha_backup_partial_time:
-      <<: *customize
-    input_text.ha_backup_status:
-      <<: *customize
-
-#########################################################
-#                                                       #
-#                       GROUP                           #
-#                                                       #
-#########################################################
-group:
-  home_assistant_backup_pack:
-    name: Home Assistant Backup Pack
-    entities:
-      - input_boolean.ha_backup_auto_full
-      - input_boolean.ha_backup_auto_partial
-      - input_boolean.ha_backup_remove_old_backup
-      - input_boolean.ha_backup_addon
-      - input_boolean.ha_backup_folder_local_add_ons
-      - input_boolean.ha_backup_folder_media
-      - input_boolean.ha_backup_folder_ssl
-      - input_boolean.ha_backup_folder_share
-      - input_boolean.ha_backup_settings_for_full
-      - input_boolean.ha_backup_settings_for_partial
-      - input_boolean.ha_backup_settings_for_retaining
-      - input_boolean.ha_backup_detailed_information
-      - input_button.ha_backup_full_execute_manually
-      - input_button.ha_delete_backup_manually
-      - input_button.ha_backup_partial_execute_manually
-      - input_select.ha_backup_day
-      - input_select.ha_backup_partial_day
-      - input_datetime.ha_backup_time
-      - input_datetime.ha_backup_partial_time
-      - input_text.ha_backup_status
-      - input_number.ha_backup_timeout
-      - input_number.ha_backup_retained_number
-      - sensor.ha_backup_last_backup_name
-      - sensor.ha_backup_last_backup_dimension
-      - sensor.ha_backup_last_backup_date
-      - sensor.ha_backup_last_backup_type
-      - sensor.ha_backup_last_backup_protected
-      - sensor.ha_backup_last_backup_slug
-      - sensor.ha_backup_retained_backups
-      - sensor.ha_backup_archive_dimension
-      - sensor.ha_backup_addon_list
-      - sensor.ha_backup_folders
-      - sensor.ha_backup_selected_folders
-      - shell_command.ha_backups_remove_old
-      - automation.ha_backup
-        
-  home_assistant_backup_selected_folders:
-    name: Home Assistant Backup Selected Folders
-    entities:
-      - input_boolean.ha_backup_folder_local_add_ons
-      - input_boolean.ha_backup_folder_media
-      - input_boolean.ha_backup_folder_ssl
-      - input_boolean.ha_backup_folder_share
-
-#########################################################
-#                                                       #
-#                        Input                          #
-#                                                       #
-#########################################################
+    input_boolean.bma_backup_destination_full_local: &id001
+      agent_id: hassio.local
+    input_boolean.bma_backup_destination_full_network: &id002
+      agent_id: ''
+    input_boolean.bma_backup_destination_full_google_drive: &id003
+      agent_id: ''
+    input_boolean.bma_backup_destination_full_s3: &id004
+      agent_id: ''
+    input_boolean.bma_backup_destination_partial_local: *id001
+    input_boolean.bma_backup_destination_partial_network: *id002
+    input_boolean.bma_backup_destination_partial_google_drive: *id003
+    input_boolean.bma_backup_destination_partial_s3: *id004
+    input_boolean.bma_backup_destination_ha_native_local: *id001
+    input_boolean.bma_backup_destination_ha_native_network: *id002
+    input_boolean.bma_backup_destination_ha_native_google_drive: *id003
+    input_boolean.bma_backup_destination_ha_native_s3: *id004
+    input_boolean.bma_backup_destination_app_update_local: *id001
+    input_boolean.bma_backup_destination_app_update_network: *id002
+    input_boolean.bma_backup_destination_app_update_google_drive: *id003
+    input_boolean.bma_backup_destination_app_update_s3: *id004
 input_boolean:
-  # Enable Automatic Backup Switch
-  ha_backup_auto_full:
-    name: Automatic Full Backup
-    icon: mdi:cloud-upload
-
-  # Enable Automatic Old Backups remove Switch
-  ha_backup_remove_old_backup:
-    name: Remove the older backups
-    icon: mdi:file-remove
-
-  # Enable Autometic Partial Backup Switch
-  ha_backup_auto_partial:
-    name: Automatic Partial Backup
-    icon: mdi:cloud-upload
-
-  # Selector for backup Addon
-  ha_backup_addon:
-    name: Add-ons Backup
-    icon: mdi:format-list-bulleted
-
-  # Selector for backup Local add-ons folder
-  ha_backup_folder_local_add_ons:
-    name: Local add-ons
-    icon: mdi:folder-arrow-up-outline
-
-  # Selector for backup Media folder
-  ha_backup_folder_media:
-    name: Media
-    icon: mdi:folder-arrow-up-outline
-
-  # Selector for backup SSL folder
-  ha_backup_folder_ssl:
-    name: SSL
-    icon: mdi:folder-arrow-up-outline
-
-  # Selector for backup Share folder
-  ha_backup_folder_share:
-    name: Share
-    icon: mdi:folder-arrow-up-outline
-
-  # Enable Show Full Backup Settings
-  ha_backup_settings_for_full:
-    name: Full Backup Settings
-    icon: mdi:cloud-upload
-
-  # Enable Show Partial Backup Settings
-  ha_backup_settings_for_partial:
-    name: Partial Backup Settings
-    icon: mdi:cloud-upload
-
-  # Enable Show Retained Backup Settings
-  ha_backup_settings_for_retaining:
-    name: Retained Backup Settings
-    icon: mdi:archive-settings
-
-  # Enable Show Detailed Backup Information
-  ha_backup_detailed_information:
-    name: Show Detailed Backup Information
-    icon: mdi:details
-
-
-#########################################################
-input_button:
-  # Button to manually execute the full backup
-  ha_backup_full_execute_manually:
-    name: Create Full Backup
-    icon: mdi:backup-restore
-
-  # Button to manually execute the partial backup
-  ha_backup_partial_execute_manually:
-    name: Create Partial Backup
-    icon: mdi:backup-restore
-
-  # Button to manually delate old backups.
-  ha_delete_backup_manually:
-    name: Delate Backups
-    icon: mdi:close-circle-outline
-
-#########################################################
-# Input to select the days for automatic backup.
-input_select:
-  # for full backup
-  ha_backup_day:
-    name: Backup days
-    options:
-      - "Every day"
-      - "Mon - Wed - Fri"
-      - "Mon and Fri"
-      - "Saturday"
-      - "Sunday"
-      - "Never"
-    icon: mdi:calendar
-
-  # for partial backup
-  ha_backup_partial_day:
-    name: Partial Backup days
-    options:
-      - "Every day"
-      - "Mon - Wed - Fri"
-      - "Mon and Fri"
-      - "Saturday"
-      - "Sunday"
-      - "Never"
-    icon: mdi:calendar
-
-#########################################################
-# Input for the schedule time of automatic backup.
-input_datetime:
-  # for full backup
-  ha_backup_time:
-    name: Backup Time
-    has_date: false
-    has_time: true
-
-  # for partial backup
-  ha_backup_partial_time:
-    name: Partial Backup Time
-    has_date: false
-    has_time: true
-
-#########################################################
-# Backup status indicator.
-input_text:
-  ha_backup_status:
-    icon: mdi:database-check
-    name: Backup Status
-
-#########################################################
+  bma_backup_initialized:
+    name: BMA Backup initialized
+  bma_backup_apply_unlocked:
+    name: BMA Backup allow real retention this session
+    initial: false
+  bma_backup_use_password:
+    name: BMA Backup use password
+  bma_backup_notify_external:
+    name: BMA Backup notify HA native
+  bma_backup_notify_app_update:
+    name: BMA Backup notify app updates
+  bma_backup_notify_unknown:
+    name: BMA Backup notify unknown events
+  bma_backup_notify_pushover:
+    name: BMA Backup Pushover notifications
+  bma_backup_full_retention_enabled:
+    name: BMA Backup full automatic retention
+  bma_backup_destination_full_local:
+    name: BMA Backup full destination Local
+  bma_backup_destination_full_network:
+    name: BMA Backup full destination SMB / Network
+  bma_backup_destination_full_google_drive:
+    name: BMA Backup full destination Google Drive
+  bma_backup_destination_full_s3:
+    name: BMA Backup full destination S3 Compatible
+  bma_backup_partial_retention_enabled:
+    name: BMA Backup partial automatic retention
+  bma_backup_destination_partial_local:
+    name: BMA Backup partial destination Local
+  bma_backup_destination_partial_network:
+    name: BMA Backup partial destination SMB / Network
+  bma_backup_destination_partial_google_drive:
+    name: BMA Backup partial destination Google Drive
+  bma_backup_destination_partial_s3:
+    name: BMA Backup partial destination S3 Compatible
+  bma_backup_ha_native_retention_enabled:
+    name: BMA Backup ha_native automatic retention
+  bma_backup_destination_ha_native_local:
+    name: BMA Backup ha_native destination Local
+  bma_backup_destination_ha_native_network:
+    name: BMA Backup ha_native destination SMB / Network
+  bma_backup_destination_ha_native_google_drive:
+    name: BMA Backup ha_native destination Google Drive
+  bma_backup_destination_ha_native_s3:
+    name: BMA Backup ha_native destination S3 Compatible
+  bma_backup_app_update_retention_enabled:
+    name: BMA Backup app_update automatic retention
+  bma_backup_destination_app_update_local:
+    name: BMA Backup app_update destination Local
+  bma_backup_destination_app_update_network:
+    name: BMA Backup app_update destination SMB / Network
+  bma_backup_destination_app_update_google_drive:
+    name: BMA Backup app_update destination Google Drive
+  bma_backup_destination_app_update_s3:
+    name: BMA Backup app_update destination S3 Compatible
+  bma_backup_full_enabled:
+    name: BMA Backup full schedule enabled
+  bma_backup_full_include_homeassistant:
+    name: BMA Backup full include Home Assistant
+  bma_backup_full_include_database:
+    name: BMA Backup full include Database
+  bma_backup_full_include_apps:
+    name: BMA Backup full include Apps / Add-ons
+  bma_backup_full_include_local_addons:
+    name: BMA Backup full include Local add-ons folder
+  bma_backup_full_include_media:
+    name: BMA Backup full include Media folder
+  bma_backup_full_include_share:
+    name: BMA Backup full include Share folder
+  bma_backup_full_include_ssl:
+    name: BMA Backup full include SSL folder
+  bma_backup_partial_enabled:
+    name: BMA Backup partial schedule enabled
+  bma_backup_partial_include_homeassistant:
+    name: BMA Backup partial include Home Assistant
+  bma_backup_partial_include_database:
+    name: BMA Backup partial include Database
+  bma_backup_partial_include_apps:
+    name: BMA Backup partial include Apps / Add-ons
+  bma_backup_partial_include_local_addons:
+    name: BMA Backup partial include Local add-ons folder
+  bma_backup_partial_include_media:
+    name: BMA Backup partial include Media folder
+  bma_backup_partial_include_share:
+    name: BMA Backup partial include Share folder
+  bma_backup_partial_include_ssl:
+    name: BMA Backup partial include SSL folder
 input_number:
- # Selector to choose the wait duration for backup check.
- ha_backup_timeout:
-   min: 15
-   max: 180
-   step: 15
-
- # Selector to chose how many backuops to mantain
- ha_backup_retained_number:
-   min: 1
-   max: 20
-   step: 1
-
-#########################################################
-#                                                       #
-#                    Commandline                        #
-#                                                       #
-#########################################################
-command_line:
-    # Sensor reporting Addonlist
-  - sensor:
-      name: "HA Backup Addon List"
-      unique_id: ha_backup_addon_list
-      scan_interval: 1800
-      json_attributes:
-        - List
-      command: |
-       curl http://supervisor/addons -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)"  | jq -rc '.data.addons[] | select (.installed != false) | .slug' | jq --raw-input . | jq --slurp  | jq -r '{"List":.}'
-      value_template: >
-        {{ value_json|length }} 
-
-    # Sensor for Name
-  - sensor:
-      name: "HA Backup Last Backup Name"
-      command: 'curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/backups | jq ''[.data.backups[]] | sort_by(.date) | last'''
-      value_template: "{{value_json.name | default}}"
-      unique_id: ha_backup_last_backup_name
-      scan_interval: 10
-
-    # Dimension
-  - sensor:
-      name: "HA Backup Last Backup Dimension"
-      command: 'curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/backups | jq ''[.data.backups[]] | sort_by(.date) | last'''
-      value_template: "{{value_json.size | default}}"
-      unit_of_measurement: MB
-      unique_id: ha_backup_last_backup_dimension
-      scan_interval: 10
-        
-    # Date        
-  - sensor:
-      name: "HA Backup Last Backup Date"
-      command: 'curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/backups | jq ''[.data.backups[]] | sort_by(.date) | last'''
-      value_template: "{{ value_json.date | as_timestamp | timestamp_custom('%Y-%m-%d') }}"
-      unique_id: ha_backup_last_backup_date
-      scan_interval: 10
-        
-    # Type
-  - sensor:
-      name: "HA Backup Last Backup Type"
-      command: 'curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/backups | jq ''[.data.backups[]] | sort_by(.date) | last'''
-      value_template: "{{value_json.type | default}}"
-      unique_id: ha_backup_last_backup_type
-      scan_interval: 10
-
-    # Protected
-  - sensor:
-      name: "HA Backup Last Backup Protected"
-      command: 'curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/backups | jq ''[.data.backups[]] | sort_by(.date) | last'''
-      value_template: "{{value_json.protected | default}}"
-      unique_id: ha_backup_last_backup_protected
-      scan_interval: 10
-
-    # File Name
-  - sensor:
-      name: "HA Backup Last Backup Slug"
-      command: 'curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/backups | jq ''[.data.backups[]] | sort_by(.date) | last'''
-      value_template: "{{value_json.slug | default}}"
-      unique_id: ha_backup_last_backup_slug
-      scan_interval: 10
-        
-    # Number of backups
-  - sensor:
-       name: "HA Backup Retained Backups"
-       command: 'curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/backups | jq --raw-output ".data.backups[].slug" | wc -w'
-       unique_id: ha_backup_retained_backups
-       scan_interval: 10
-
-    # Dimension of backups archive
-  - sensor:
-       name: "HA Backup Archive Dimension"
-       command: | 
-         curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/backups | jq --raw-output ".data.backups[].size" | awk '{s+=$1} END {print s}'
-       value_template: "{{ value | multiply(0.0009765625) | round(2) }}"
-       unit_of_measurement: "GB"
-       unique_id: ha_backup_archive_dimension
-       scan_interval: 10
-
-#########################################################
-#                                                       #
-#                      Template                         #
-#                                                       #
-#########################################################
-template:
-      # Sensor for selected folders to be backuped
-    - sensor:
-        - name: "HA Backup Selected Folders"
-          state: >
-            {{ expand('group.home_assistant_backup_selected_folders')
-              | selectattr('state','eq','on') 
-              | map(attribute='name')
-              | list }}
-          unique_id: ha_backup_selected_folders
-
-#########################################################
-#                                                       #
-#                    Shell Command                      #
-#                                                       #
-#########################################################
-shell_command:
-  # Remove old backup script
-  ha_backups_remove_old: /bin/bash /config/backup_remove.sh {{ states('input_number.ha_backup_retained_number')|int(0) }}
-
-
-#########################################################
-#                                                       #
-#                     Automations                       #
-#                                                       #
-#########################################################
-automation:
-  - alias: ha_backup
-    description: ""
-    trigger:
-      - platform: state
-        entity_id: input_button.ha_backup_full_execute_manually
-        id: ha_full_backup_manual
-        alias: Trigger full backup manual
-      - platform: template
-        value_template: >-
-          {{ states('sensor.time') ==
-          (states.input_datetime.ha_backup_time.attributes.timestamp | int |
-          timestamp_custom('%H:%M', False)) }}
-        id: ha_full_backup_automatic
-        alias: Trigger full backup automatic
-      - platform: state
-        entity_id: input_button.ha_backup_partial_execute_manually
-        id: ha_partial_backup_manual
-        alias: Trigger partial backup manual
-      - platform: template
-        value_template: >-
-          {{ states('sensor.time') ==
-          (states.input_datetime.ha_backup_partial_time.attributes.timestamp | int |
-          timestamp_custom('%H:%M', False)) }}
-        id: ha_partial_backup_automatic
-        alias: Trigger partial backup automatic
-      - platform: state
-        entity_id: input_button.ha_delete_backup_manually
-        id: ha_manual_bk_delate
-        alias: Trigger delate old backup
-    condition:
-      - condition: or
-        conditions:
-          - condition: and
-            conditions:
-              - condition: state
-                entity_id: input_boolean.ha_backup_auto_full
-                state: "on"
-                alias: Condition 1 - Automatic full backup ON
-              - condition: template
-                value_template: >-
-                  {% set today =
-                  ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'][now().weekday()]
-                  %} {% if is_state("input_select.ha_backup_day", "Every day") %}
-                  true {% elif (is_state("input_select.ha_backup_day", "Mon and
-                  Fri") and today in ["Monday","Friday"]) %} true {% elif
-                  is_state("input_select.ha_backup_day", "Saturday") and today in
-                  ["Saturday"] %} true {% elif
-                  is_state("input_select.ha_backup_day", "Sunday") and today in
-                  ["Sunday"] %} true {% elif is_state("input_select.ha_backup_day",
-                  "Mon - Wed - Fri") and today in ["Monday","Wednesday","Friday"] %}
-                  true {% else %} false {% endif %}
-                alias: Condition 2 - Automatic full backup correct day
-              - condition: trigger
-                id: ha_full_backup_automatic
-                alias: Condition 3 - Automatic ful backup triggered
-            alias: Condition for automatic full backup
-          - condition: trigger
-            id:
-              - ha_full_backup_manual
-            alias: Condition for manual full backup
-          - condition: and
-            conditions:
-              - condition: state
-                entity_id: input_boolean.ha_backup_auto_partial
-                state: "on"
-                alias: Condition 1 - Automatic partial backup ON
-              - condition: template
-                value_template: >-
-                  {% set today =
-                  ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'][now().weekday()]
-                  %} {% if is_state("input_select.ha_backup_partial_day", "Every
-                  day") %} true {% elif
-                  (is_state("input_select.ha_backup_partial_day", "Mon and Fri") and
-                  today in ["Monday","Friday"]) %} true {% elif
-                  is_state("input_select.ha_backup_partial_day", "Saturday") and
-                  today in ["Saturday"] %} true {% elif
-                  is_state("input_select.ha_backup_partial_day", "Sunday") and today
-                  in ["Sunday"] %} true {% elif
-                  is_state("input_select.ha_backup_partial_day", "Mon - Wed - Fri")
-                  and today in ["Monday","Wednesday","Friday"] %} true {% else %}
-                  false {% endif %}
-                alias: Condition 2 - Automatic partial backup correct day
-              - condition: trigger
-                id: ha_partial_backup_automatic
-                alias: Condition 3 - Automatic partial backup triggered
-            alias: Conditions for automatic partial backup
-          - condition: trigger
-            id:
-              - ha_partial_backup_manual
-            alias: Condition for maial partial backup
-          - condition: trigger
-            id:
-              - ha_manual_bk_delate
-            alias: Condition for manuale delate old backup
-        alias: Conditions for automatic backup
-    action:
+  bma_backup_full_keep_last:
+    name: BMA Backup full keep last
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+  bma_backup_full_daily:
+    name: BMA Backup full daily
+    min: 0
+    max: 365
+    step: 1
+    mode: box
+  bma_backup_full_weekly:
+    name: BMA Backup full weekly
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+  bma_backup_full_monthly:
+    name: BMA Backup full monthly
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+  bma_backup_full_yearly:
+    name: BMA Backup full yearly
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+  bma_backup_partial_keep_last:
+    name: BMA Backup partial keep last
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+  bma_backup_partial_daily:
+    name: BMA Backup partial daily
+    min: 0
+    max: 365
+    step: 1
+    mode: box
+  bma_backup_partial_weekly:
+    name: BMA Backup partial weekly
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+  bma_backup_partial_monthly:
+    name: BMA Backup partial monthly
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+  bma_backup_partial_yearly:
+    name: BMA Backup partial yearly
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+  bma_backup_ha_native_keep_last:
+    name: BMA Backup ha_native keep last
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+  bma_backup_ha_native_daily:
+    name: BMA Backup ha_native daily
+    min: 0
+    max: 365
+    step: 1
+    mode: box
+  bma_backup_ha_native_weekly:
+    name: BMA Backup ha_native weekly
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+  bma_backup_ha_native_monthly:
+    name: BMA Backup ha_native monthly
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+  bma_backup_ha_native_yearly:
+    name: BMA Backup ha_native yearly
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+  bma_backup_app_update_keep_last:
+    name: BMA Backup app_update keep last
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+  bma_backup_app_update_daily:
+    name: BMA Backup app_update daily
+    min: 0
+    max: 365
+    step: 1
+    mode: box
+  bma_backup_app_update_weekly:
+    name: BMA Backup app_update weekly
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+  bma_backup_app_update_monthly:
+    name: BMA Backup app_update monthly
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+  bma_backup_app_update_yearly:
+    name: BMA Backup app_update yearly
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+input_select:
+  bma_backup_full_days:
+    name: BMA Backup full days
+    options:
+      - Never
+      - Every day
+      - Mon - Wed - Fri
+      - Mon and Fri
+      - Saturday
+      - Sunday
+  bma_backup_partial_days:
+    name: BMA Backup partial days
+    options:
+      - Never
+      - Every day
+      - Mon - Wed - Fri
+      - Mon and Fri
+      - Saturday
+      - Sunday
+  bma_backup_retention_profile:
+    name: BMA Backup retention profile
+    options:
+      - full
+      - partial
+      - ha_native
+      - app_update
+input_datetime:
+  bma_backup_full_time:
+    name: BMA Backup full time
+    has_date: false
+    has_time: true
+  bma_backup_partial_time:
+    name: BMA Backup partial time
+    has_date: false
+    has_time: true
+script:
+  bma_backup_initialize:
+    alias: BMA Backup initialize once
+    mode: single
+    sequence:
+      - condition: template
+        value_template: '{{ is_state(''input_boolean.bma_backup_initialized'', ''off'') }}'
+      - action: input_boolean.turn_on
+        target:
+          entity_id:
+            - input_boolean.bma_backup_full_include_homeassistant
+            - input_boolean.bma_backup_full_include_database
+            - input_boolean.bma_backup_full_include_apps
+            - input_boolean.bma_backup_full_include_local_addons
+            - input_boolean.bma_backup_full_include_media
+            - input_boolean.bma_backup_full_include_share
+            - input_boolean.bma_backup_full_include_ssl
+            - input_boolean.bma_backup_partial_include_homeassistant
+            - input_boolean.bma_backup_partial_include_database
+            - input_boolean.bma_backup_destination_full_local
+            - input_boolean.bma_backup_destination_partial_local
+            - input_boolean.bma_backup_notify_external
+            - input_boolean.bma_backup_notify_pushover
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.bma_backup_full_keep_last
+        data:
+          value: 3
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.bma_backup_partial_keep_last
+        data:
+          value: 3
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.bma_backup_ha_native_keep_last
+        data:
+          value: 3
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.bma_backup_app_update_keep_last
+        data:
+          value: 3
+      - action: input_datetime.set_datetime
+        target:
+          entity_id: input_datetime.bma_backup_full_time
+        data:
+          time: 03:00:00
+      - action: input_datetime.set_datetime
+        target:
+          entity_id: input_datetime.bma_backup_partial_time
+        data:
+          time: 04:00:00
+      - action: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.bma_backup_initialized
+  bma_backup_notify:
+    alias: BMA Backup notify
+    mode: parallel
+    max: 10
+    fields:
+      message:
+        required: true
+        selector:
+          text: {}
+    sequence:
+      - action: persistent_notification.create
+        data:
+          title: Home Assistant Backup Manager 3.0
+          message: '{{ message }}'
+          notification_id: bma_backup_notice
+        continue_on_error: true
+      - if: '{{ is_state(''input_boolean.bma_backup_notify_pushover'', ''on'') }}'
+        then:
+          - action: notify.pushover_hassio
+            data:
+              title: Home Assistant Backup Manager 3.0
+              message: '{{ message }}'
+            continue_on_error: true
+  bma_backup_resolve_destinations:
+    alias: BMA Backup resolve destinations
+    mode: parallel
+    max: 10
+    sequence:
+      - variables:
+          result: |-
+            {% set ns = namespace(ids=[], bad=[]) %}
+            {% set entries = states.input_boolean | selectattr('entity_id', 'match', '^input_boolean.bma_backup_destination_' ~ job ~ '_') | list %}
+            {% for item in entries %}
+              {% if item.state not in ['on', 'off'] %}{% set ns.bad = ns.bad + [item.entity_id] %}
+              {% elif item.state == 'on' %}
+                {% set agent = item.attributes.get('agent_id') %}
+                {% if agent is string and agent | trim | length > 0 %}{% set ns.ids = ns.ids + [agent | trim] %}
+                {% else %}{% set ns.bad = ns.bad + [item.entity_id] %}{% endif %}
+              {% endif %}
+            {% endfor %}
+            {{ dict(agent_ids=ns.ids | unique | list | sort, invalid=ns.bad, selector_count=entries | length) }}
+      - stop: Resolved destination selectors
+        response_variable: result
+  bma_backup_run_full:
+    alias: BMA Backup run full
+    mode: single
+    sequence:
+      - action: script.bma_backup_worker
+        data:
+          operation: create
+          job: full
+  bma_backup_run_partial:
+    alias: BMA Backup run partial
+    mode: single
+    sequence:
+      - action: script.bma_backup_worker
+        data:
+          operation: create
+          job: partial
+  bma_backup_plan_retention:
+    alias: BMA Backup plan retention
+    mode: single
+    sequence:
+      - action: script.bma_backup_worker
+        data:
+          operation: plan
+          job: '{{ states(''input_select.bma_backup_retention_profile'') }}'
+  bma_backup_apply_retention:
+    alias: BMA Backup apply retention
+    mode: single
+    sequence:
+      - action: script.bma_backup_worker
+        data:
+          operation: apply
+          job: '{{ states(''input_select.bma_backup_retention_profile'') }}'
+  bma_backup_worker:
+    alias: BMA Backup serialized worker
+    description: Internal worker; all package create and retention operations share this queue.
+    mode: queued
+    max: 10
+    trace:
+      stored_traces: 0
+    sequence:
+      - variables:
+          operation: '{{ operation | default(''invalid'') }}'
+          job: '{{ job | default(''invalid'') }}'
+          automatic: '{{ automatic | default(false) }}'
+          event_agents: '{{ event_agents | default([]) }}'
+          snapshot: {}
+          result: {}
+          destinations: {}
+      - if: '{{ operation not in [''create'',''plan'',''apply''] or job not in [''full'',''partial'',''ha_native'',''app_update'']
+          or (operation == ''create'' and job not in [''full'',''partial'']) }}'
+        then:
+          - action: script.bma_backup_notify
+            data:
+              message: Invalid operation or profile.
+          - event: bma_backup_report
+            event_data:
+              kind: operation
+              status: failed
+              message: Invalid operation or profile.
+          - stop: Invalid operation or profile.
+            error: true
+      - if: '{{ not is_state(''input_boolean.bma_backup_initialized'',''on'') }}'
+        then:
+          - action: script.bma_backup_notify
+            data:
+              message: Package not initialized. Run BMA Backup initialize once.
+          - event: bma_backup_report
+            event_data:
+              kind: operation
+              status: failed
+              message: Package not initialized. Run BMA Backup initialize once.
+          - stop: Package not initialized. Run BMA Backup initialize once.
+            error: true
+      - if: '{{ operation == ''apply'' and not is_state(''input_boolean.bma_backup_apply_unlocked'',''on'')
+          }}'
+        then:
+          - action: script.bma_backup_notify
+            data:
+              message: Real retention is locked. No deletion requested.
+          - event: bma_backup_report
+            event_data:
+              kind: operation
+              status: failed
+              message: Real retention is locked. No deletion requested.
+          - stop: Real retention is locked. No deletion requested.
+            error: true
+      - if: '{{ automatic }}'
+        then:
+          - condition: template
+            value_template: '{{ operation == ''apply'' and is_state(''input_boolean.bma_backup_'' ~ job ~ ''_retention_enabled'',''on'')
+              }}'
+      - action: script.bma_backup_resolve_destinations
+        data:
+          job: '{{ job }}'
+        response_variable: destinations
+      - if: '{{ destinations.invalid | length > 0 or destinations.agent_ids | length == 0 }}'
+        then:
+          - action: script.bma_backup_notify
+            data:
+              message: No valid destination selected, or a selector is unavailable/unmapped.
+          - event: bma_backup_report
+            event_data:
+              kind: operation
+              status: failed
+              message: No valid destination selected, or a selector is unavailable/unmapped.
+          - stop: No valid destination selected, or a selector is unavailable/unmapped.
+            error: true
+      - variables:
+          agent_ids: '{{ destinations.agent_ids }}'
+      - if: '{{ automatic and (agent_ids | reject(''in'', event_agents) | list | length > 0) }}'
+        then:
+          - action: script.bma_backup_notify
+            data:
+              message: 'Automatic retention skipped: selected scope includes a destination not confirmed by
+                the new-backup event.'
+          - event: bma_backup_report
+            event_data:
+              kind: operation
+              status: failed
+              message: 'Automatic retention skipped: selected scope includes a destination not confirmed by
+                the new-backup event.'
+          - stop: 'Automatic retention skipped: selected scope includes a destination not confirmed by the
+              new-backup event.'
+            error: true
+      - action: backup_manager_actions.refresh
+        response_variable: snapshot
+        continue_on_error: true
+      - if: '{{ snapshot is not mapping or snapshot.get(''agents'') is not mapping or snapshot.get(''agent_errors'')
+          is not mapping or snapshot.get(''state'') != ''idle'' }}'
+        then:
+          - action: script.bma_backup_notify
+            data:
+              message: Backup Manager unavailable, busy, or returned an invalid response. Inspect BMA logs.
+          - event: bma_backup_report
+            event_data:
+              kind: operation
+              status: failed
+              message: Backup Manager unavailable, busy, or returned an invalid response. Inspect BMA logs.
+          - stop: Backup Manager unavailable, busy, or returned an invalid response. Inspect BMA logs.
+            error: true
+      - if: '{{ agent_ids | reject(''in'', snapshot.agents) | list | length > 0 or agent_ids | select(''in'',
+          snapshot.agent_errors) | list | length > 0 }}'
+        then:
+          - action: script.bma_backup_notify
+            data:
+              message: A selected backup agent is absent or has an inventory error. No operation requested.
+          - event: bma_backup_report
+            event_data:
+              kind: operation
+              status: failed
+              message: A selected backup agent is absent or has an inventory error. No operation requested.
+          - stop: A selected backup agent is absent or has an inventory error. No operation requested.
+            error: true
+      - event: bma_backup_report
+        event_data:
+          kind: operation
+          status: running
+          message: '{{ operation ~ ": " ~ job }}'
       - choose:
-          - conditions:
-              - condition: trigger
-                id:
-                  - ha_full_backup_automatic
-                  - ha_full_backup_manual
-                alias: Option 1 - Full backup triggered
+          - conditions: '{{ operation == ''create'' }}'
             sequence:
-              - service: input_text.set_value
-                data:
-                  value: Backup started at {{states('sensor.time')}}
-                target:
-                  entity_id: input_text.ha_backup_status
-                alias: Update backup status - Create full
-              - service: hassio.backup_full
-                data:
-                  compressed: false
-                  name: Backup {{ now().strftime('%Y-%m-%d') }}
-                alias: Ececute full backup
-          - conditions:
-              - condition: trigger
-                id:
-                  - ha_partial_backup_automatic
-                  - ha_partial_backup_manual
-                alias: Option 2 - Partial backup triggered
-            sequence:
-              - service: input_text.set_value
-                data:
-                  value: Partial backup started at {{states('sensor.time')}}
-                target:
-                  entity_id: input_text.ha_backup_status
-                alias: Update backup status - Create partial
-              - service: hassio.backup_partial
-                data:
-                  name: Backup Partial {{ now().strftime('%Y-%m-%d') }}
-                  compressed: false
-                  homeassistant: true
-                  addons: |
-                    {% if is_state('input_boolean.ha_backup_addon', 'on') -%}
-                    {{ state_attr('sensor.ha_backup_addon_list','List') }}
-                    {%- else -%}
-                    {{ [] }}
-                    {% endif -%}
-                  folders: |
-                    {{ states('sensor.ha_backup_selected_folders') }}     
-                alias: Execute partial backup
-        alias: Actions if backup create is triggered
-      - if:
-          - condition: trigger
-            id:
-              - ha_full_backup_automatic
-              - ha_full_backup_manual
-              - ha_partial_backup_automatic
-              - ha_partial_backup_manual
-            alias: IF a backup is created
-        then:
-          - wait_for_trigger:
-              - platform: event
-                event_type: state_changed
-                event_data:
-                  entity_id: sensor.ha_backup_last_backup_slug
-            timeout: 
-              minutes: |
-                {{ states('input_number.ha_backup_timeout') | int(0) }}
-            continue_on_timeout: true
-            alias: Wait for trigger
-          - if: "{{ wait.remaining != 0 }}"
-            then:
-              - service: input_text.set_value
-                data_template:
-                  entity_id: input_text.ha_backup_status
-                  value: >-
-                    Last Backup {{ now().timestamp() | timestamp_custom('%Y-%m-%d')}}
-                    at {{states('sensor.time')}}
-                alias: Set backup status to succesfull
-              - service: notify.pushover_hassio
-                data:
-                  message: |
-                    Backup completed
-                    {{ now().timestamp() | timestamp_custom('%Y-%m-%d') }}
-                  title: Home Assistant
-                  data:
-                    sound: pinnabor
-                    priority: 0
-                alias: Pushover succesfull notification
-              - service: notify.persistent_notification
-                data:
-                  message: >
-                    Backup completed
-                    {{ now().timestamp() | timestamp_custom('%Y-%m-%d') }}
-                    at {{states('sensor.time')}}
-                  title: Home Assistant Backup
-                alias: Persistant notification fo succesfull backup
-              - alias: Test if the old backup shoud be delated
-                if: 
-                  - condition: template
-                    value_template: |
-                      {{ states('input_boolean.ha_backup_remove_old_backup') == 'on' }}
-                    alias: IF automaitc backup delate is selected
+              - if: '{{ states(''input_boolean.bma_backup_use_password'') not in [''on'',''off''] }}'
                 then:
-                  - service: shell_command.ha_backups_remove_old
-                    alias: Execut the shell command delate
-            else:
-              - service: input_text.set_value
-                data_template:
-                  entity_id: input_text.ha_backup_status
-                  value: Backup Failled!
-                alias: Set backup status to failed
-              - service: notify.pushover_hassio
+                  - action: script.bma_backup_notify
+                    data:
+                      message: Encryption selector is unavailable; refusing to create an unintentionally unencrypted
+                        backup.
+                  - event: bma_backup_report
+                    event_data:
+                      kind: operation
+                      status: failed
+                      message: Encryption selector is unavailable; refusing to create an unintentionally unencrypted
+                        backup.
+                  - stop: Encryption selector is unavailable; refusing to create an unintentionally unencrypted
+                      backup.
+                    error: true
+              - if: |-
+                  {% set ns=namespace(bad=false) %}{% for key in ['homeassistant','database','apps','local_addons','media','share','ssl'] %}
+                  {% if states('input_boolean.bma_backup_' ~ job ~ '_include_' ~ key) not in ['on','off'] %}{% set ns.bad=true %}{% endif %}{% endfor %}{{ ns.bad }}
+                then:
+                  - action: script.bma_backup_notify
+                    data:
+                      message: A content selector is unavailable.
+                  - event: bma_backup_report
+                    event_data:
+                      kind: operation
+                      status: failed
+                      message: A content selector is unavailable.
+                  - stop: A content selector is unavailable.
+                    error: true
+              - choose:
+                  - conditions: '{{ is_state(''input_boolean.bma_backup_use_password'',''on'') }}'
+                    sequence:
+                      - action: backup_manager_actions.create
+                        data:
+                          agent_ids: '{{ agent_ids }}'
+                          job_id: '{{ job }}'
+                          name: BMA {{ job }} {{ now().strftime("%Y-%m-%d %H:%M:%S") }}
+                          include_homeassistant: '{{ is_state(''input_boolean.bma_backup_'' ~ job ~ ''_include_homeassistant'',''on'')
+                            }}'
+                          include_database: '{{ is_state(''input_boolean.bma_backup_'' ~ job ~ ''_include_database'',''on'')
+                            }}'
+                          include_all_addons: '{{ is_state(''input_boolean.bma_backup_'' ~ job ~ ''_include_apps'',''on'')
+                            }}'
+                          include_folders: |-
+                            {% set ns=namespace(folders=[]) %}
+                            {% for key, folder in [('local_addons','addons/local'),('media','media'),('share','share'),('ssl','ssl')] %}
+                            {% if is_state('input_boolean.bma_backup_' ~ job ~ '_include_' ~ key,'on') %}{% set ns.folders=ns.folders+[folder] %}{% endif %}
+                            {% endfor %}{{ ns.folders }}
+                          password: !secret ha_backup_password
+                        response_variable: result
+                        continue_on_error: true
+                default:
+                  - action: backup_manager_actions.create
+                    data:
+                      agent_ids: '{{ agent_ids }}'
+                      job_id: '{{ job }}'
+                      name: BMA {{ job }} {{ now().strftime("%Y-%m-%d %H:%M:%S") }}
+                      include_homeassistant: '{{ is_state(''input_boolean.bma_backup_'' ~ job ~ ''_include_homeassistant'',''on'')
+                        }}'
+                      include_database: '{{ is_state(''input_boolean.bma_backup_'' ~ job ~ ''_include_database'',''on'')
+                        }}'
+                      include_all_addons: '{{ is_state(''input_boolean.bma_backup_'' ~ job ~ ''_include_apps'',''on'')
+                        }}'
+                      include_folders: |-
+                        {% set ns=namespace(folders=[]) %}
+                        {% for key, folder in [('local_addons','addons/local'),('media','media'),('share','share'),('ssl','ssl')] %}
+                        {% if is_state('input_boolean.bma_backup_' ~ job ~ '_include_' ~ key,'on') %}{% set ns.folders=ns.folders+[folder] %}{% endif %}
+                        {% endfor %}{{ ns.folders }}
+                    response_variable: result
+                    continue_on_error: true
+              - if: '{{ result is not mapping or not result.get(''backup_id'') or result.get(''source_type'')
+                  != ''bma'' or result.get(''job_id'') != job or result.get(''stored_agent_ids'') is not iterable
+                  or result.get(''stored_agent_ids'') is string or (agent_ids | reject(''in'', result.get(''stored_agent_ids'',[]))
+                  | list | length > 0) or result.get(''failed_agent_ids'', [''invalid'']) != [] or result.get(''failed_addons'',
+                  [''invalid'']) != [] or result.get(''failed_folders'', [''invalid'']) != [] }}'
+                then:
+                  - action: script.bma_backup_notify
+                    data:
+                      message: Backup creation failed or could not be verified. Partial copies may exist. Inspect
+                        BMA logs and inventory; no package retention follows a failed BMA create.
+                  - event: bma_backup_report
+                    event_data:
+                      kind: operation
+                      status: failed
+                      message: Backup creation failed or could not be verified. Partial copies may exist. Inspect
+                        BMA logs and inventory; no package retention follows a failed BMA create.
+                  - stop: Backup creation failed or could not be verified. Partial copies may exist. Inspect
+                      BMA logs and inventory; no package retention follows a failed BMA create.
+                    error: true
+              - action: script.bma_backup_notify
                 data:
-                  message: |
-                    Backup creation failed!
-                  title: Home Assistant
-                  data:
-                    sound: pinnabor
-                    priority: 1
-                alias: Pushover failed notification
-              - service: notify.persistent_notification
+                  message: 'Backup {{ job }} completed: {{ result.name }} | {{ result.date }} | Confirmed destinations:
+                    {{ result.stored_agent_ids | join(", ") }}. Retention, if enabled, is reported separately.'
+              - event: bma_backup_report
+                event_data:
+                  kind: operation
+                  status: success
+                  message: '{{ "Verified " ~ job ~ " backup: " ~ result.backup_id }}'
+        default:
+          - variables:
+              policy: |-
+                {% set ns=namespace(values={}, valid=true) %}
+                {% for key in ['keep_last','daily','weekly','monthly','yearly'] %}
+                {% set value=states('input_number.bma_backup_' ~ job ~ '_' ~ key) %}
+                {% if not is_number(value) or value | float < 0 or value | float != value | int %}{% set ns.valid=false %}{% endif %}
+                {% set ns.values=dict(ns.values, **{key: value | int(0)}) %}
+                {% endfor %}{{ dict(values=ns.values, valid=ns.valid) }}
+          - if: '{{ not policy.valid or policy[''values''].values() | sum <= 0 }}'
+            then:
+              - action: script.bma_backup_notify
                 data:
-                  message: |
-                    Backup creation failed!
-                    {{ now().timestamp() | timestamp_custom('%Y-%m-%d') }}
-                  title: Home Assistant Backup
-                alias: Persistant notification to backp failed
-            alias: Test beckup creation
-        alias: Actions id a backup is created
-      - if:
-          - condition: trigger
-            id:
-              - ha_manual_bk_delate
-            alias: IF manual backup delate triggered
+                  message: 'Invalid retention policy: use nonnegative integers and at least one positive counter.'
+              - event: bma_backup_report
+                event_data:
+                  kind: operation
+                  status: failed
+                  message: 'Invalid retention policy: use nonnegative integers and at least one positive counter.'
+              - stop: 'Invalid retention policy: use nonnegative integers and at least one positive counter.'
+                error: true
+          - variables:
+              request: |-
+                {% set base=dict(policy['values'], agent_ids=agent_ids, source_type=('bma' if job in ['full','partial'] else job)) %}
+                {{ dict(base, job_id=job) if job in ['full','partial'] else dict(base, group_by='app') if job == 'app_update' else base }}
+          - action: '{{ ''backup_manager_actions.plan_retention'' if operation == ''plan'' else ''backup_manager_actions.apply_retention''
+              }}'
+            data: '{{ request }}'
+            response_variable: result
+            continue_on_error: true
+          - variables:
+              plan: '{{ result.get(''plan'', {}) if operation == ''apply'' and result is mapping else result
+                }}'
+          - if: '{{ plan is not mapping or plan.get(''summary'') is not mapping or plan.get(''scope'') is not
+              mapping or plan.get(''evaluated_at'') is not string }}'
+            then:
+              - action: script.bma_backup_notify
+                data:
+                  message: 'Retention failed or returned an invalid response. An apply may have stopped after
+                    partial deletion: inspect BMA logs and current inventory.'
+              - event: bma_backup_report
+                event_data:
+                  kind: operation
+                  status: failed
+                  message: 'Retention failed or returned an invalid response. An apply may have stopped after
+                    partial deletion: inspect BMA logs and current inventory.'
+              - stop: 'Retention failed or returned an invalid response. An apply may have stopped after partial
+                  deletion: inspect BMA logs and current inventory.'
+                error: true
+          - if: '{{ plan.scope.get(''agent_ids'',[]) | sort != agent_ids | sort or plan.scope.get(''source_type'')
+              != request.source_type or (job in [''full'',''partial''] and plan.scope.get(''job_id'') != job)
+              }}'
+            then:
+              - action: script.bma_backup_notify
+                data:
+                  message: Retention response scope mismatch.
+              - event: bma_backup_report
+                event_data:
+                  kind: operation
+                  status: failed
+                  message: Retention response scope mismatch.
+              - stop: Retention response scope mismatch.
+                error: true
+          - if: '{{ operation == ''apply'' and (result.get(''execution'') is not mapping or result.execution.get(''deleted_count'')
+              is not number or result.execution.get(''already_absent_count'') is not number) }}'
+            then:
+              - action: script.bma_backup_notify
+                data:
+                  message: Retention execution response is incomplete; inspect BMA logs.
+              - event: bma_backup_report
+                event_data:
+                  kind: operation
+                  status: failed
+                  message: Retention execution response is incomplete; inspect BMA logs.
+              - stop: Retention execution response is incomplete; inspect BMA logs.
+                error: true
+          - if: '{% set ns=namespace(bad=false) %}{% for key in [''considered'',''keep'',''delete'',''out_of_scope'',''reclaimable_size_bytes'']
+              %}{% if plan.summary.get(key) is not number %}{% set ns.bad=true %}{% endif %}{% endfor %}{{
+              ns.bad or plan.summary.get(''reclaimable_size_complete'') is not boolean }}'
+            then:
+              - action: script.bma_backup_notify
+                data:
+                  message: Retention summary is incomplete.
+              - event: bma_backup_report
+                event_data:
+                  kind: operation
+                  status: failed
+                  message: Retention summary is incomplete.
+              - stop: Retention summary is incomplete.
+                error: true
+          - event: bma_backup_report
+            event_data:
+              kind: retention
+              operation: '{{ operation }}'
+              job: '{{ job }}'
+              evaluated_at: '{{ plan.evaluated_at }}'
+              summary: '{{ plan.summary }}'
+              scope: '{{ plan.scope }}'
+              execution: '{{ result.get(''execution'', {}) if operation == ''apply'' else {} }}'
+          - action: script.bma_backup_notify
+            data:
+              message: 'Retention {{ operation }} / {{ job }}: considered={{ plan.summary.considered }}, keep={{
+                plan.summary.keep }}, delete={{ plan.summary.delete }}, out_of_scope={{ plan.summary.out_of_scope
+                }}, reclaimable={{ plan.summary.reclaimable_size_bytes }} bytes (complete={{ plan.summary.reclaimable_size_complete
+                }}). {% if operation == "apply" %}Verified deleted={{ result.execution.deleted_count }}, already
+                absent={{ result.execution.already_absent_count }}.{% endif %}'
+          - event: bma_backup_report
+            event_data:
+              kind: operation
+              status: success
+              message: '{{ "Retention " ~ operation ~ " completed: " ~ job }}'
+automation:
+  - id: bma_backup_startup
+    alias: bma_backup_startup
+    triggers:
+      - trigger: homeassistant
+        event: start
+    actions:
+      - action: script.bma_backup_initialize
+      - event: bma_backup_report
+        event_data:
+          kind: operation
+          status: idle
+          message: Started; no previous operation is replayed. Inspect backups after an interrupted operation.
+    mode: single
+  - id: bma_backup_full_scheduler
+    alias: bma_backup_full_scheduler
+    triggers:
+      - trigger: time
+        at: input_datetime.bma_backup_full_time
+    conditions:
+      - condition: template
+        value_template: |-
+          {% set days = states('input_select.bma_backup_full_days') %}
+          {{ is_state('input_boolean.bma_backup_full_enabled', 'on') and
+          (days == 'Every day' or (days == 'Mon - Wed - Fri' and now().weekday() in [0,2,4]) or
+          (days == 'Mon and Fri' and now().weekday() in [0,4]) or (days == 'Saturday' and now().weekday() == 5) or (days == 'Sunday' and now().weekday() == 6)) }}
+    actions:
+      - action: script.bma_backup_run_full
+    mode: single
+  - id: bma_backup_partial_scheduler
+    alias: bma_backup_partial_scheduler
+    triggers:
+      - trigger: time
+        at: input_datetime.bma_backup_partial_time
+    conditions:
+      - condition: template
+        value_template: |-
+          {% set days = states('input_select.bma_backup_partial_days') %}
+          {{ is_state('input_boolean.bma_backup_partial_enabled', 'on') and
+          (days == 'Every day' or (days == 'Mon - Wed - Fri' and now().weekday() in [0,2,4]) or
+          (days == 'Mon and Fri' and now().weekday() in [0,4]) or (days == 'Saturday' and now().weekday() == 5) or (days == 'Sunday' and now().weekday() == 6)) }}
+    actions:
+      - action: script.bma_backup_run_partial
+    mode: single
+  - id: bma_backup_backup_created
+    alias: bma_backup_backup_created
+    mode: queued
+    max: 20
+    triggers:
+      - trigger: event
+        event_type: backup_manager_actions_backup_created
+    conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.get(''backup_id'') is string and trigger.event.data.get(''agent_ids'')
+          is sequence and trigger.event.data.get(''agent_ids'') is not string and trigger.event.data.get(''agent_ids'')
+          | length > 0 and trigger.event.data.get(''failed_agent_ids'', [''invalid'']) == [] }}'
+    actions:
+      - variables:
+          source: '{{ trigger.event.data.get(''source_type'',''unknown'') }}'
+          job: '{{ trigger.event.data.get(''job_id'') if trigger.event.data.get(''source_type'') == ''bma''
+            else trigger.event.data.get(''source_type'',''unknown'') }}'
+      - if: '{{ (source == ''ha_native'' and is_state(''input_boolean.bma_backup_notify_external'',''on''))
+          or (source == ''app_update'' and is_state(''input_boolean.bma_backup_notify_app_update'',''on''))
+          or (source == ''unknown'' and is_state(''input_boolean.bma_backup_notify_unknown'',''on'')) }}'
         then:
-          - service: shell_command.ha_backups_remove_old
-            alias: Execute the shell command delate
-        alias: Actions if manual backup delate is triggered
-
-
-#################################################################
-#                                                               #
-#                 END of Packages/HA Backup                     #
-#                                                               #
-#################################################################
+          - action: script.bma_backup_notify
+            data:
+              message: 'External backup ({{ source }}): {{ trigger.event.data.get("name", "") }} | {{ trigger.event.data.get("date",
+                "") }} | App: {{ trigger.event.data.get("app_slug", "") }} | Destinations: {{ trigger.event.data.agent_ids
+                | join(", ") }}'
+      - if: '{{ job in [''full'',''partial'',''ha_native'',''app_update''] and source in [''bma'',''ha_native'',''app_update'']
+          and is_state(''input_boolean.bma_backup_'' ~ job ~ ''_retention_enabled'',''on'') and is_state(''input_boolean.bma_backup_apply_unlocked'',''on'')
+          }}'
+        then:
+          - action: script.turn_on
+            target:
+              entity_id: script.bma_backup_worker
+            data:
+              variables:
+                operation: apply
+                job: '{{ job }}'
+                automatic: true
+                event_agents: '{{ trigger.event.data.agent_ids }}'
+  - id: bma_backup_destination_health
+    alias: bma_backup_destination_health
+    triggers:
+      - trigger: state
+        entity_id: binary_sensor.bma_backup_required_destinations_ready
+        from: 'on'
+        to: 'off'
+      - trigger: state
+        entity_id: binary_sensor.bma_backup_required_destinations_ready
+        from: 'off'
+        to: 'on'
+    actions:
+      - action: script.bma_backup_notify
+        data:
+          message: Required backup destinations {{ "recovered" if trigger.to_state.state == "on" else "are
+            unavailable or misconfigured" }}. Unselected destinations are excluded.
+    mode: queued
+    max: 5
+template:
+  - binary_sensor:
+      - name: BMA Backup full destinations ready
+        unique_id: bma_backup_full_destinations_ready
+        default_entity_id: binary_sensor.bma_backup_full_destinations_ready
+        state: |-
+          {% set job='full' %}
+          {% set ns=namespace(ids=[],bad=false) %}
+          {% for item in states.input_boolean | selectattr('entity_id','match','^input_boolean.bma_backup_destination_' ~ job ~ '_') %}
+          {% if item.state not in ['on','off'] %}{% set ns.bad=true %}{% elif item.state == 'on' %}
+          {% set a=item.attributes.get('agent_id') %}{% if a is not string or not a | trim %}{% set ns.bad=true %}{% else %}{% set ns.ids=ns.ids+[a | trim] %}{% endif %}{% endif %}{% endfor %}
+          {% set agents=state_attr('sensor.destinazioni_backup','agents') %}{% set errors=state_attr('sensor.destinazioni_backup','agent_errors') %}
+          {{ has_value('sensor.destinazioni_backup') and agents is mapping and errors is mapping and not ns.bad and ns.ids | length > 0 and ns.ids | reject('in', agents) | list | length == 0 and ns.ids | select('in', errors) | list | length == 0 }}
+      - name: BMA Backup partial destinations ready
+        unique_id: bma_backup_partial_destinations_ready
+        default_entity_id: binary_sensor.bma_backup_partial_destinations_ready
+        state: |-
+          {% set job='partial' %}
+          {% set ns=namespace(ids=[],bad=false) %}
+          {% for item in states.input_boolean | selectattr('entity_id','match','^input_boolean.bma_backup_destination_' ~ job ~ '_') %}
+          {% if item.state not in ['on','off'] %}{% set ns.bad=true %}{% elif item.state == 'on' %}
+          {% set a=item.attributes.get('agent_id') %}{% if a is not string or not a | trim %}{% set ns.bad=true %}{% else %}{% set ns.ids=ns.ids+[a | trim] %}{% endif %}{% endif %}{% endfor %}
+          {% set agents=state_attr('sensor.destinazioni_backup','agents') %}{% set errors=state_attr('sensor.destinazioni_backup','agent_errors') %}
+          {{ has_value('sensor.destinazioni_backup') and agents is mapping and errors is mapping and not ns.bad and ns.ids | length > 0 and ns.ids | reject('in', agents) | list | length == 0 and ns.ids | select('in', errors) | list | length == 0 }}
+      - name: BMA Backup ha_native destinations ready
+        unique_id: bma_backup_ha_native_destinations_ready
+        default_entity_id: binary_sensor.bma_backup_ha_native_destinations_ready
+        state: |-
+          {% set job='ha_native' %}
+          {% set ns=namespace(ids=[],bad=false) %}
+          {% for item in states.input_boolean | selectattr('entity_id','match','^input_boolean.bma_backup_destination_' ~ job ~ '_') %}
+          {% if item.state not in ['on','off'] %}{% set ns.bad=true %}{% elif item.state == 'on' %}
+          {% set a=item.attributes.get('agent_id') %}{% if a is not string or not a | trim %}{% set ns.bad=true %}{% else %}{% set ns.ids=ns.ids+[a | trim] %}{% endif %}{% endif %}{% endfor %}
+          {% set agents=state_attr('sensor.destinazioni_backup','agents') %}{% set errors=state_attr('sensor.destinazioni_backup','agent_errors') %}
+          {{ has_value('sensor.destinazioni_backup') and agents is mapping and errors is mapping and not ns.bad and ns.ids | length > 0 and ns.ids | reject('in', agents) | list | length == 0 and ns.ids | select('in', errors) | list | length == 0 }}
+      - name: BMA Backup app_update destinations ready
+        unique_id: bma_backup_app_update_destinations_ready
+        default_entity_id: binary_sensor.bma_backup_app_update_destinations_ready
+        state: |-
+          {% set job='app_update' %}
+          {% set ns=namespace(ids=[],bad=false) %}
+          {% for item in states.input_boolean | selectattr('entity_id','match','^input_boolean.bma_backup_destination_' ~ job ~ '_') %}
+          {% if item.state not in ['on','off'] %}{% set ns.bad=true %}{% elif item.state == 'on' %}
+          {% set a=item.attributes.get('agent_id') %}{% if a is not string or not a | trim %}{% set ns.bad=true %}{% else %}{% set ns.ids=ns.ids+[a | trim] %}{% endif %}{% endif %}{% endfor %}
+          {% set agents=state_attr('sensor.destinazioni_backup','agents') %}{% set errors=state_attr('sensor.destinazioni_backup','agent_errors') %}
+          {{ has_value('sensor.destinazioni_backup') and agents is mapping and errors is mapping and not ns.bad and ns.ids | length > 0 and ns.ids | reject('in', agents) | list | length == 0 and ns.ids | select('in', errors) | list | length == 0 }}
+      - name: BMA Backup required destinations ready
+        unique_id: bma_backup_required_destinations_ready
+        default_entity_id: binary_sensor.bma_backup_required_destinations_ready
+        state: |-
+          {% set ns=namespace(ok=true) %}{% for job in ['full','partial','ha_native','app_update'] %}
+          {% set active=is_state('input_boolean.bma_backup_' ~ job ~ '_enabled','on') or is_state('input_boolean.bma_backup_' ~ job ~ '_retention_enabled','on') %}
+          {% if active and not is_state('binary_sensor.bma_backup_' ~ job ~ '_destinations_ready','on') %}{% set ns.ok=false %}{% endif %}{% endfor %}{{ ns.ok }}
+  - triggers:
+      - trigger: event
+        event_type: bma_backup_report
+        event_data:
+          kind: operation
+    sensor:
+      - name: BMA Backup status
+        default_entity_id: sensor.bma_backup_status
+        unique_id: bma_backup_status
+        state: '{{ trigger.event.data.status }}'
+        attributes:
+          message: '{{ trigger.event.data.message }}'
+          updated_at: '{{ now().isoformat() }}'
+  - triggers:
+      - trigger: event
+        event_type: bma_backup_report
+        event_data:
+          kind: retention
+          operation: plan
+    sensor:
+      - name: BMA Backup Future Simulation (Dry Run)
+        default_entity_id: sensor.bma_backup_retention_plan
+        unique_id: bma_backup_retention_plan
+        state: '{{ trigger.event.data.evaluated_at }}'
+        attributes:
+          job: '{{ trigger.event.data.job }}'
+          summary: '{{ trigger.event.data.summary }}'
+          scope: '{{ trigger.event.data.scope }}'
+          execution: '{{ trigger.event.data.execution }}'
+  - triggers:
+      - trigger: event
+        event_type: bma_backup_report
+        event_data:
+          kind: retention
+          operation: apply
+    sensor:
+      - name: BMA Backup Last Actual Run
+        default_entity_id: sensor.bma_backup_retention_apply
+        unique_id: bma_backup_retention_apply
+        state: '{{ trigger.event.data.evaluated_at }}'
+        attributes:
+          job: '{{ trigger.event.data.job }}'
+          summary: '{{ trigger.event.data.summary }}'
+          scope: '{{ trigger.event.data.scope }}'
+          execution: '{{ trigger.event.data.execution }}'
