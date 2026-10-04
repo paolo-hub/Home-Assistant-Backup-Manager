@@ -1,0 +1,4 @@
+# Python >=3.14.2; tested with Python 3.14.7.
+homeassistant==2026.9.4
+pytest==9.1.1
+pytest-asyncio==1.4.0
