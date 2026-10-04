@@ -11,9 +11,9 @@ or deletion has been performed by development tests.
    during testing. Paolo must explicitly approve any temporary pause. Do not run
    tests while legacy shell retention can delete test backups unexpectedly.
 3. Save the current HA configuration/dashboard using your normal procedure.
-4. Copy ONLY `package/pkg_backup_home_assistant.yaml` to
+4. Copy `package/pkg_backup_home_assistant.yaml` to
    `/config/packages/pkg_bma_backup.yaml` (different name from legacy).
-   Do not copy `backup_remove.sh`. Packages must already be enabled with
+   No shell retention script is part of v3. Packages must already be enabled with
    `homeassistant: packages: !include_dir_named packages`.
 5. The existing secret key `ha_backup_password` must exist in `secrets.yaml`, even
    with password use OFF, because HA resolves secrets at configuration load.

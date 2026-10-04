@@ -97,8 +97,9 @@ notifications. This package does not modify those automations. Before live testi
 Paolo must choose a controlled window or explicitly pause legacy retention; no
 claim of archive isolation is made. Both schedulers must not be enabled together.
 
-The historical shell file remains in Git only; v3 never references it. Do not copy
-it during v3 installation. Do not remove the live legacy package during initial E2E.
+The historical shell retention file has been removed from the v3 branch; v3 never
+uses or ships it. The legacy implementation remains available on main/Git history.
+Do not remove the live legacy package during initial E2E.
 
 ## Official syntax references checked
 
