@@ -1,18 +1,18 @@
 # Home Assistant Backup Manager 3.0 development / BMA 1.1.0
 # Install alongside legacy under a DIFFERENT filename: pkg_bma_backup.yaml.
 # Configure provider agent_id values below using BMA list_agents.
-# Empty provider IDs intentionally fail closed when selected.
+# External IDs match the installation verified on 2026-10-05; adapt for other installations.
 # Do not enable real retention or schedules before the approved E2E.
 homeassistant:
   customize:
     input_boolean.bma_backup_destination_full_local: &id001
       agent_id: hassio.local
     input_boolean.bma_backup_destination_full_network: &id002
-      agent_id: ''
+      agent_id: hassio.Backup
     input_boolean.bma_backup_destination_full_google_drive: &id003
-      agent_id: ''
+      agent_id: google_drive.paolo_bertolli_gmail_com
     input_boolean.bma_backup_destination_full_s3: &id004
-      agent_id: ''
+      agent_id: s3_compatible.01M3HGM43E1SP3H02B0ZN5TRDC
     input_boolean.bma_backup_destination_partial_local: *id001
     input_boolean.bma_backup_destination_partial_network: *id002
     input_boolean.bma_backup_destination_partial_google_drive: *id003

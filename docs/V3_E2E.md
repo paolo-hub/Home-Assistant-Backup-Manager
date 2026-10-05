@@ -20,8 +20,10 @@ or deletion has been performed by development tests.
    Reuse its existing value. Never paste it into Git, events, logs, or reports.
 6. Execute BMA `backup_manager_actions.list_agents` in Developer Tools > Actions,
    returning the response. Confirm Local mapping `hassio.local`. Configure each
-   external `agent_id` once in the YAML customization anchors when ready. Empty
-   provider IDs are deliberate; leave external selectors OFF for initial tests.
+   external `agent_id` once in the YAML customization anchors if it differs from
+   the maintainer’s mapping verified on 2026-10-05. Leave external selectors OFF
+   for initial Local tests. After editing customizations, check configuration and
+   restart HA so all four profiles receive the mapping.
 7. Confirm these BMA entity IDs exist. New BMA installations can have different
    defaults; adapt presentation references if necessary:
    `sensor.backup`, `sensor.destinazioni_backup`, `sensor.ultimo_backup`,
@@ -66,8 +68,8 @@ or deletion has been performed by development tests.
 ## Safe failure tests
 
 - Turn all destinations OFF for one profile and run it: explicit failure, no create.
-- Enable an external selector whose mapping is still empty: explicit failure,
-  no create. Restore it OFF afterward.
+- In an isolated test configuration, enable a selector with an empty mapping:
+  explicit failure, no create. The runtime regression suite covers this case.
 - Test provider-error handling only using a disposable/mocked provider or an
   explicitly approved failure scenario; do not disrupt production storage.
 - Check a broken but unselected S3 does not block a healthy Local job.

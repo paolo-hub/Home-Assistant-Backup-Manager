@@ -120,7 +120,7 @@ Initial destination defaults for both Full and Partial:
 - Google Drive: OFF
 - S3 Compatible: OFF
 
-External provider IDs are intentionally left empty until they are read from the live BMA `list_agents` response.
+External provider IDs are configured for the maintainer’s installation using the live BMA `list_agents` response verified on 2026-10-05. For another installation, replace these IDs in `homeassistant.customize` with its own `list_agents` values. Selecting a destination does not discover its ID automatically.
 
 Destination selectors follow:
 

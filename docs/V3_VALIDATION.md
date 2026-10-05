@@ -119,3 +119,21 @@ Executed the two relevant static tests: **2 passed** (32 runtime/other cases
 not rerun because package behavior is unchanged). Tests validate card roots,
 matching controls, YAML parsing, entity references and absence of custom-card
 dependencies. Browser rendering and live entity availability remain E2E checks.
+
+
+## External destination mappings — 2026-10-05
+
+Configured Network, Google Drive and S3 from the live `list_agents` response
+provided by the maintainer. Shared YAML anchors propagate each ID to all four
+profiles. Other installations must replace these installation-specific IDs.
+
+Added 12 runtime cases (three external agents × four profiles), exercising the
+real HA package merge and customized helper attributes, exact create scopes for
+Full/Partial, and exact retention-plan scopes for every profile. The unmapped
+regression now injects a separate unconfigured selector instead of assuming
+Network has no mapping.
+
+Complete suite: **46 passed**, 48 dependency warnings, 22.39 seconds,
+Home Assistant 2026.9.4 / Python 3.14.7. BMA/provider I/O remains simulated;
+no live backup, retention apply, or deletion was performed. Live installation
+requires configuration validation and an HA restart to load customizations.

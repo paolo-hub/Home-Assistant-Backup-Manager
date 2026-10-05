@@ -123,7 +123,8 @@ async def test_full_local_and_password(env):
 async def test_fail_closed(env,case):
     e=env
     if case=='none':await toggle(e,'destination_partial_local',False)
-    if case=='unmapped':await toggle(e,'destination_partial_network')
+    if case=='unmapped':
+        e.hass.states.async_set('input_boolean.bma_backup_destination_partial_unconfigured','on',{'agent_id':''})
     if case=='absent':e.state['agents']={}
     if case=='error':e.state['errors']={'hassio.local':'offline'}
     if case=='busy':e.state['state']='creating_backup'
@@ -358,3 +359,34 @@ def test_frontend_card_and_dashboard_entry_points():
         for child in item.get('cards', []):
             check_card(child)
     check_card(card)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('job', ['full', 'partial', 'ha_native', 'app_update'])
+@pytest.mark.parametrize('destination,agent_id,domain', [
+    ('network', 'hassio.Backup', 'hassio'),
+    ('google_drive', 'google_drive.paolo_bertolli_gmail_com', 'google_drive'),
+    ('s3', 's3_compatible.01M3HGM43E1SP3H02B0ZN5TRDC', 's3_compatible'),
+])
+async def test_external_destination_mapping(env, job, destination, agent_id, domain):
+    """Exercise merged customizations and actual create/plan service scopes."""
+    e = env
+    e.state['agents'][agent_id] = {'name': destination, 'domain': domain}
+    await toggle(e, 'destination_' + job + '_local', False)
+    await toggle(e, 'destination_' + job + '_' + destination)
+    selector = e.hass.states.get('input_boolean.bma_backup_destination_' + job + '_' + destination)
+    assert selector.attributes['agent_id'] == agent_id
+    if job in ['full', 'partial']:
+        await invoke(e, 'run_' + job)
+        creates = [data for service, data in e.calls if service == 'create']
+        assert len(creates) == 1
+        assert creates[0]['agent_ids'] == [agent_id]
+    await e.hass.services.async_call('input_select', 'select_option', {
+        'entity_id': 'input_select.bma_backup_retention_profile', 'option': job,
+    }, blocking=True)
+    await invoke(e, 'plan_retention')
+    plans = [data for service, data in e.calls if service == 'plan_retention']
+    assert len(plans) == 1
+    assert plans[0]['agent_ids'] == [agent_id]
+    assert plans[0]['source_type'] == ('bma' if job in ['full', 'partial'] else job)
+    assert not any(service == 'apply_retention' for service, data in e.calls)

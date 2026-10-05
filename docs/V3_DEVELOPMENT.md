@@ -34,8 +34,8 @@ HA restart after editing the registry; isolated helper reloads can temporarily
 leave missing customizations and will fail closed. Do not rename entity IDs.
 An unavailable selector is an invalid configuration, even if its last state was OFF.
 
-The external provider IDs are intentionally empty; configure from live BMA
-`list_agents`. Local `hassio.local` is the OS/Supervised mapping validated with
+The external provider IDs match the maintainer’s live BMA `list_agents` response
+verified on 2026-10-05; replace them for other installations. Local `hassio.local` is the OS/Supervised mapping validated with
 BMA; other installation types must confirm/change it too. Registration alone is
 not health: preflight refresh checks errors for selected agents. Out-of-scope
 errors do not block a valid selected scope. No global completeness gate wrongly
