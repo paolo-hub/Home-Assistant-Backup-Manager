@@ -1,0 +1,232 @@
+# Complete dashboard: use the dashboard raw configuration editor, not the card editor.
+title: BMA Backup 3.0 E2E
+views:
+  - title: BMA Backup
+    path: bma-backup
+    icon: mdi:backup-restore
+    cards:
+      - type: markdown
+        content: |-
+          ## Home Assistant Backup Manager 3.0
+          Development / E2E — automatic schedules and retention start OFF. Real retention is locked after every restart.
+
+          {{ state_attr("sensor.bma_backup_status", "message") }}
+      - type: entities
+        title: Status
+        show_header_toggle: false
+        entities:
+          - sensor.bma_backup_status
+          - binary_sensor.bma_backup_required_destinations_ready
+          - binary_sensor.bma_backup_full_destinations_ready
+          - binary_sensor.bma_backup_partial_destinations_ready
+          - sensor.ultimo_backup
+          - sensor.backup
+          - sensor.backup_bma
+          - sensor.backup_ha_nativi
+          - sensor.backup_aggiornamento_app
+          - sensor.dimensione_archivio_backup
+      - type: horizontal-stack
+        cards:
+          - type: button
+            name: Run Full
+            icon: mdi:backup-restore
+            tap_action:
+              action: perform-action
+              perform_action: script.bma_backup_run_full
+          - type: button
+            name: Run Partial
+            icon: mdi:backup-restore
+            tap_action:
+              action: perform-action
+              perform_action: script.bma_backup_run_partial
+      - type: entities
+        title: Retention operation
+        show_header_toggle: false
+        entities:
+          - input_select.bma_backup_retention_profile
+          - input_boolean.bma_backup_apply_unlocked
+      - type: horizontal-stack
+        cards:
+          - type: button
+            name: Dry Run
+            icon: mdi:backup-restore
+            tap_action:
+              action: perform-action
+              perform_action: script.bma_backup_plan_retention
+          - type: button
+            name: Apply Retention
+            icon: mdi:flask-outline
+            tap_action:
+              action: perform-action
+              perform_action: script.bma_backup_apply_retention
+              confirmation:
+                text: This requests REAL deletion in the selected profile and agent scope. Continue only after
+                  approved E2E and policy review.
+      - type: entities
+        title: Full settings
+        show_header_toggle: false
+        entities:
+          - input_boolean.bma_backup_full_enabled
+          - input_select.bma_backup_full_days
+          - input_datetime.bma_backup_full_time
+          - type: section
+            label: Contents
+          - input_boolean.bma_backup_full_include_homeassistant
+          - input_boolean.bma_backup_full_include_database
+          - input_boolean.bma_backup_full_include_apps
+          - input_boolean.bma_backup_full_include_local_addons
+          - input_boolean.bma_backup_full_include_media
+          - input_boolean.bma_backup_full_include_share
+          - input_boolean.bma_backup_full_include_ssl
+          - type: section
+            label: Destinations
+          - input_boolean.bma_backup_destination_full_local
+          - input_boolean.bma_backup_destination_full_network
+          - input_boolean.bma_backup_destination_full_google_drive
+          - input_boolean.bma_backup_destination_full_s3
+      - type: entities
+        title: Partial settings
+        show_header_toggle: false
+        entities:
+          - input_boolean.bma_backup_partial_enabled
+          - input_select.bma_backup_partial_days
+          - input_datetime.bma_backup_partial_time
+          - type: section
+            label: Contents
+          - input_boolean.bma_backup_partial_include_homeassistant
+          - input_boolean.bma_backup_partial_include_database
+          - input_boolean.bma_backup_partial_include_apps
+          - input_boolean.bma_backup_partial_include_local_addons
+          - input_boolean.bma_backup_partial_include_media
+          - input_boolean.bma_backup_partial_include_share
+          - input_boolean.bma_backup_partial_include_ssl
+          - type: section
+            label: Destinations
+          - input_boolean.bma_backup_destination_partial_local
+          - input_boolean.bma_backup_destination_partial_network
+          - input_boolean.bma_backup_destination_partial_google_drive
+          - input_boolean.bma_backup_destination_partial_s3
+      - type: entities
+        title: Notifications and encryption
+        show_header_toggle: false
+        entities:
+          - input_boolean.bma_backup_use_password
+          - input_boolean.bma_backup_notify_pushover
+          - input_boolean.bma_backup_notify_external
+          - input_boolean.bma_backup_notify_app_update
+          - input_boolean.bma_backup_notify_unknown
+      - type: entities
+        title: Full retention
+        show_header_toggle: false
+        entities:
+          - input_boolean.bma_backup_full_retention_enabled
+          - input_number.bma_backup_full_keep_last
+          - input_number.bma_backup_full_daily
+          - input_number.bma_backup_full_weekly
+          - input_number.bma_backup_full_monthly
+          - input_number.bma_backup_full_yearly
+      - type: entities
+        title: Partial retention
+        show_header_toggle: false
+        entities:
+          - input_boolean.bma_backup_partial_retention_enabled
+          - input_number.bma_backup_partial_keep_last
+          - input_number.bma_backup_partial_daily
+          - input_number.bma_backup_partial_weekly
+          - input_number.bma_backup_partial_monthly
+          - input_number.bma_backup_partial_yearly
+      - type: entities
+        title: Ha Native retention
+        show_header_toggle: false
+        entities:
+          - input_boolean.bma_backup_ha_native_retention_enabled
+          - input_number.bma_backup_ha_native_keep_last
+          - input_number.bma_backup_ha_native_daily
+          - input_number.bma_backup_ha_native_weekly
+          - input_number.bma_backup_ha_native_monthly
+          - input_number.bma_backup_ha_native_yearly
+          - type: section
+            label: Explicit independent destinations (all OFF initially)
+          - input_boolean.bma_backup_destination_ha_native_local
+          - input_boolean.bma_backup_destination_ha_native_network
+          - input_boolean.bma_backup_destination_ha_native_google_drive
+          - input_boolean.bma_backup_destination_ha_native_s3
+      - type: entities
+        title: App Update retention
+        show_header_toggle: false
+        entities:
+          - input_boolean.bma_backup_app_update_retention_enabled
+          - input_number.bma_backup_app_update_keep_last
+          - input_number.bma_backup_app_update_daily
+          - input_number.bma_backup_app_update_weekly
+          - input_number.bma_backup_app_update_monthly
+          - input_number.bma_backup_app_update_yearly
+          - type: section
+            label: Explicit independent destinations (all OFF initially)
+          - input_boolean.bma_backup_destination_app_update_local
+          - input_boolean.bma_backup_destination_app_update_network
+          - input_boolean.bma_backup_destination_app_update_google_drive
+          - input_boolean.bma_backup_destination_app_update_s3
+      - type: markdown
+        title: Future Simulation (Dry Run)
+        content: |-
+          {% set report = 'sensor.bma_backup_retention_plan' %}
+          {% set s = state_attr(report,'summary') %}
+          {% if s is mapping %}
+          **{{ state_attr(report,'job') }}** · {{ states(report) }}
+
+          Considered: {{ s.considered }} · Keep: {{ s.keep }} · Delete candidates: {{ s.delete }}
+
+          Out of scope: {{ s.out_of_scope }}
+
+          Reclaimable: {{ s.reclaimable_size_bytes }} bytes · Complete: {{ s.reclaimable_size_complete }}
+
+          Scope: {{ state_attr(report,'scope') }}
+
+          {% if 'plan' == 'apply' %}Execution: {{ state_attr(report,'execution') }}{% endif %}
+          {% else %}No verified report yet.{% endif %}
+      - type: markdown
+        title: Last Actual Run
+        content: |-
+          {% set report = 'sensor.bma_backup_retention_apply' %}
+          {% set s = state_attr(report,'summary') %}
+          {% if s is mapping %}
+          **{{ state_attr(report,'job') }}** · {{ states(report) }}
+
+          Considered: {{ s.considered }} · Keep: {{ s.keep }} · Delete candidates: {{ s.delete }}
+
+          Out of scope: {{ s.out_of_scope }}
+
+          Reclaimable: {{ s.reclaimable_size_bytes }} bytes · Complete: {{ s.reclaimable_size_complete }}
+
+          Scope: {{ state_attr(report,'scope') }}
+
+          {% if 'apply' == 'apply' %}Execution: {{ state_attr(report,'execution') }}{% endif %}
+          {% else %}No verified report yet.{% endif %}
+      - type: markdown
+        title: Detailed latest backup and archive
+        content: |-
+          {% set latest='sensor.ultimo_backup' %}
+          Name: {{ state_attr(latest,'name') }}
+
+          Date: {{ state_attr(latest,'date') }}
+
+          Source / job: {{ state_attr(latest,'source_type') }} / {{ state_attr(latest,'job_id') }}
+
+          Logical size (bytes): {{ state_attr(latest,'logical_size_bytes') }}
+
+          Copies (protected means encrypted, not retention-exempt): {{ state_attr(latest,'agents') }}
+
+          Archive complete: {{ state_attr('sensor.dimensione_archivio_backup','inventory_complete') }}
+
+          Physical size complete: {{ state_attr('sensor.dimensione_archivio_backup','physical_size_complete') }}
+
+          Registered agents: {{ state_attr('sensor.destinazioni_backup','agents') }}
+
+          Agent errors: {{ state_attr('sensor.destinazioni_backup','agent_errors') }}
+      - type: history-graph
+        title: Physical archive size (check completeness above)
+        hours_to_show: 168
+        entities:
+          - sensor.dimensione_archivio_backup
+    type: masonry

@@ -101,3 +101,21 @@ simulated. No live operation was performed.
 To repair an existing installation, update the package and reload Scripts after
 checking configuration; a full HA restart also applies the fix. No helper reset,
 legacy restoration, or schedule/retention activation is required.
+
+## Lovelace entry-point correction — 2026-10-05
+
+The original `ha_backup_frontend.yaml` was a full dashboard (`title`/`views`),
+which is invalid when pasted into the single-card editor. The user reported a
+frontend loading failure without its exact error text; this structural mismatch
+is confirmed, but the live failure itself has not been reproduced in a browser.
+
+`ha_backup_frontend.yaml` now has a `type: vertical-stack` root for the Manual
+card editor, matching the legacy installation workflow. The complete dashboard
+is retained separately as `ha_backup_dashboard.yaml` with an explicit masonry
+view. Both contain identical controls and unchanged service actions. Updated
+README/E2E instructions distinguish the two editors.
+
+Executed the two relevant static tests: **2 passed** (32 runtime/other cases
+not rerun because package behavior is unchanged). Tests validate card roots,
+matching controls, YAML parsing, entity references and absence of custom-card
+dependencies. Browser rendering and live entity availability remain E2E checks.

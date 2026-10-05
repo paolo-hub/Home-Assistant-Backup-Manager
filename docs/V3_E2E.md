@@ -38,9 +38,11 @@ or deletion has been performed by development tests.
 - Local ON for Full/Partial; external providers OFF. External retention profiles
   have no destination ON. Automatic Full/Partial and all retention OFF.
 - `input_boolean.bma_backup_apply_unlocked` must be OFF.
-- Import `package/ha_backup_frontend.yaml` as a NEW test dashboard through the raw
-  configuration editor. Alternatively copy its sole view to the existing dashboard.
-  Do not replace the existing BACKUP view. Only native cards are required.
+- Paste all of `package/ha_backup_frontend.yaml` into **Add card > Manual > code
+  editor** in the existing dashboard. It is a single vertical-stack card.
+  Alternatively, import `package/ha_backup_dashboard.yaml` as a NEW test dashboard
+  through its raw configuration editor. Do not paste that dashboard file into the
+  card editor. Do not replace the existing BACKUP view. Only native cards are required.
 - Change a non-destructive selector, restart, verify persistence and restore it.
   Initialization must not reapply defaults. Session apply unlock must remain OFF.
 - After a YAML registry change, restart. Do not rename IDs in the UI. A new provider

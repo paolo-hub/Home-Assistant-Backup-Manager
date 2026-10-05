@@ -344,3 +344,17 @@ async def test_notify_service_active_after_package_merge(env):
     assert env.hass.services.has_service('script', 'bma_backup_notify')
     await invoke(env, 'notify', message='Package merge notification test')
     assert any(n['message'] == 'Package merge notification test' for n in env.notices)
+
+
+def test_frontend_card_and_dashboard_entry_points():
+    card = yaml.safe_load((ROOT/'package/ha_backup_frontend.yaml').read_text())
+    dashboard = yaml.safe_load((ROOT/'package/ha_backup_dashboard.yaml').read_text())
+    assert card['type'] == 'vertical-stack'
+    assert 'views' not in card
+    assert dashboard['views'][0]['type'] == 'masonry'
+    assert dashboard['views'][0]['cards'] == card['cards']
+    def check_card(item):
+        assert isinstance(item.get('type'), str) and item['type']
+        for child in item.get('cards', []):
+            check_card(child)
+    check_card(card)

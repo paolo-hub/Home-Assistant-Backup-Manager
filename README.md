@@ -53,7 +53,8 @@ See:
 ```text
 package/
   pkg_backup_home_assistant.yaml   # v3 package
-  ha_backup_frontend.yaml          # native Lovelace E2E dashboard
+  ha_backup_frontend.yaml          # native Lovelace E2E card
+  ha_backup_dashboard.yaml         # optional complete E2E dashboard
 
 docs/
   V3_DEVELOPMENT.md
@@ -242,7 +243,9 @@ Follow `docs/V3_E2E.md` exactly before any real deletion.
 
 ## Frontend
 
-`package/ha_backup_frontend.yaml` is a standalone **test dashboard** built only with native Home Assistant cards.
+`package/ha_backup_frontend.yaml` is a **single vertical-stack card** built only with native Home Assistant cards. Paste its entire contents into **Add card → Manual → code editor** in your existing dashboard.
+
+For a separate complete dashboard, use `package/ha_backup_dashboard.yaml` in the **dashboard raw configuration editor**. The two files contain the same controls; do not paste the dashboard file into a card editor.
 
 It exposes:
 
