@@ -333,7 +333,9 @@ script:
       message:
         required: true
         selector:
-          text: {}
+          # Keep a non-empty mapping: HA package merging drops empty dictionaries.
+          text:
+            multiline: true
     sequence:
       - action: persistent_notification.create
         data:

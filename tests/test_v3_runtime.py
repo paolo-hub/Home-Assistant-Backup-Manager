@@ -11,6 +11,9 @@ import yaml
 from homeassistant.core import HomeAssistant, SupportsResponse, CoreState
 from homeassistant.setup import async_setup_component
 from homeassistant import loader, bootstrap
+from homeassistant.config import merge_packages_config, _recursive_merge
+from homeassistant.helpers.selector import validate_selector
+import voluptuous as vol
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import template
 
@@ -22,13 +25,24 @@ Loader.add_constructor('!secret', lambda loader, node: 'test-only-password')
 def load_package():
     return yaml.load((ROOT/'package/pkg_backup_home_assistant.yaml').read_text(), Loader=Loader)
 
+async def package_config(hass):
+    """Exercise the same package merge used by HA's YAML configuration loader."""
+    packages = {'bma_backup': load_package()}
+    config = {'homeassistant': {'packages': packages}}
+    errors = []
+    await merge_packages_config(hass, config, packages,
+                                _log_pkg_error=lambda *args: errors.append(args[-1]))
+    assert not errors, errors
+    return config
+
 @pytest_asyncio.fixture
 async def env(tmp_path):
     (tmp_path/'configuration.yaml').write_text('{}\n')
     hass = HomeAssistant(str(tmp_path))
     hass.config.time_zone = 'Europe/Rome'
     hass.config.skip_pip = True
-    config = load_package()
+    loader.async_setup(hass)
+    config = await package_config(hass)
     calls=[]; notices=[]; reports=[]
     state={'agents':{'hassio.local':{'name':'Local','domain':'hassio'}},'errors':{},'state':'idle','create_error':False,'bad_response':False,'apply_error':False,'hold':None}
     async def refresh(call):
@@ -59,7 +73,6 @@ async def env(tmp_path):
     hass.services.async_register('notify','pushover_hassio',notify)
     hass.bus.async_listen('bma_backup_report',lambda event:reports.append(dict(event.data)))
     # Setup genuine HA integrations. There is no Supervisor, provider, or real backup manager.
-    loader.async_setup(hass)
     assert await bootstrap.async_from_config_dict(config, hass) is hass
     await hass.async_block_till_done()
     for domain in ['input_boolean','input_number','input_select','input_datetime','script','template','automation']:
@@ -272,7 +285,7 @@ async def test_real_restore_no_replay(env):
     restarted=HomeAssistant(path)
     restarted.config.skip_pip=True
     loader.async_setup(restarted)
-    assert await bootstrap.async_from_config_dict(load_package(),restarted) is restarted
+    assert await bootstrap.async_from_config_dict(await package_config(restarted),restarted) is restarted
     await restarted.async_start()
     await restarted.async_block_till_done()
     try:
@@ -309,3 +322,25 @@ def test_namespace_frontend_and_no_legacy_path():
         assert entity in defined, entity
     assert 'custom:' not in ui
     assert p['script']['bma_backup_worker']['trace']['stored_traces']==0
+
+
+def test_notify_selector_survives_package_merge():
+    old = {'selector': {'text': {}}}
+    merged = {}
+    _recursive_merge(merged, old)
+    assert merged['selector'] == {}
+    with pytest.raises(vol.Invalid, match='Only one type can be specified'):
+        validate_selector(merged['selector'])
+    field = load_package()['script']['bma_backup_notify']['fields']['message']
+    merged = {}
+    _recursive_merge(merged, field)
+    selector = validate_selector(merged['selector'])
+    assert set(selector) == {'text'}
+    assert selector['text']['multiline'] is True
+
+
+@pytest.mark.asyncio
+async def test_notify_service_active_after_package_merge(env):
+    assert env.hass.services.has_service('script', 'bma_backup_notify')
+    await invoke(env, 'notify', message='Package merge notification test')
+    assert any(n['message'] == 'Package merge notification test' for n in env.notices)

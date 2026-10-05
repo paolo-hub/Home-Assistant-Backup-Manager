@@ -80,3 +80,24 @@ Also executed the unchanged upstream `tests/test_events.py` from BMA stable
 1.1.0 at `161eeba96b50e2679c2849e948c306991506486a`: **9 passed** (0.04 s).
 This verifies the delegated startup/deduplication boundary separately; those
 upstream tests are not copied into the package repository and BMA is not modified.
+
+## Package merge regression — 2026-10-05
+
+Live installation reported an inactive `script.bma_backup_notify` with
+`Only one type can be specified` at `fields.message.selector`.
+HA 2026.9.4's package `_recursive_merge` drops empty dictionaries, so the original
+`selector: {text: {}}` became an empty selector. The earlier runtime tests loaded
+package contents directly at the root; they did not exercise package merging.
+Their passing results therefore did not establish installability as a package.
+
+The selector now explicitly sets `text.multiline: true`. Runtime setup and restart
+tests now call HA's real `merge_packages_config` with the package under
+`homeassistant.packages`, including its customization path. Added a regression
+that reproduces the original empty-selector exception and validates the corrected
+selector, plus a test that calls the active notify service after package merging.
+The complete updated suite passes **33 tests**; backup/provider/Pushover I/O remain
+simulated. No live operation was performed.
+
+To repair an existing installation, update the package and reload Scripts after
+checking configuration; a full HA restart also applies the fix. No helper reset,
+legacy restoration, or schedule/retention activation is required.
